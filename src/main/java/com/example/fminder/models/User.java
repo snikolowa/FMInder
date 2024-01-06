@@ -1,35 +1,54 @@
 package com.example.fminder.models;
 
+import com.example.fminder.models.enums.Gender;
+import com.example.fminder.models.enums.Major;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "users")
 public class User {
 
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private int id;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
+    @Column(name = "email")
     private String email;
+    @Column(name = "password")
     private String password;
-    private Gender graduationYear;
-    private int year;
+    @Column(name = "gender")
+    private Gender gender;
+    @Column(name = "graduate_year")
+    private int graduateYear;
+    @Column(name = "major")
     private Major major;
+    @Column(name = "interests")
+    private String interests;
 
-    public User(String firstName, String lastName, String email, String password, Gender graduationYear, int year, Major major) {
+    public User(String firstName, String lastName, String email, String password, Gender gender, int graduateYear, Major major, String interests) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.graduationYear = graduationYear;
-        this.year = year;
+        this.gender = gender;
+        this.graduateYear = graduateYear;
         this.major = major;
+        this.interests = interests;
     }
 
     public User() {
 
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -65,20 +84,20 @@ public class User {
         this.password = password;
     }
 
-    public Gender getGraduationYear() {
-        return graduationYear;
+    public Gender getGender() {
+        return gender;
     }
 
-    public void setGraduationYear(Gender graduationYear) {
-        this.graduationYear = graduationYear;
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
-    public int getYear() {
-        return year;
+    public int getGraduateYear() {
+        return graduateYear;
     }
 
-    public void setYear(int year) {
-        this.year = year;
+    public void setGraduateYear(int graduateYear) {
+        this.graduateYear = graduateYear;
     }
 
     public Major getMajor() {
@@ -87,5 +106,13 @@ public class User {
 
     public void setMajor(Major major) {
         this.major = major;
+    }
+
+    public String getInterests() {
+        return interests;
+    }
+
+    public void setInterests(String interests) {
+        this.interests = interests;
     }
 }

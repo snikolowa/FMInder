@@ -1,4 +1,4 @@
-package com.example.fminder.models;
+package com.example.fminder.models.enums;
 
 public enum Gender {
     MALE,

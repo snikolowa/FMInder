@@ -1,41 +1,38 @@
 package com.example.fminder.helpers;
 
-import com.example.fminder.exceptions.AuthenticationFailureException;
-import com.example.fminder.exceptions.EntityNotFoundException;
-import com.example.fminder.models.User;
-import com.example.fminder.services.UserService;
+import com.example.fminder.exceptions.UnauthorizedException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AuthenticationHelper {
 
     public static final String AUTHENTICATION_FAILURE_MESSAGE = "Wrong email or password";
-    private final UserService userService;
+    public static final String LOGGED = "LOGGED";
+    public static final String USER_ID = "USER_ID";
+    public static final String REMOTE_IP = "REMOTE_IP";
 
-    @Autowired
-    public AuthenticationHelper(UserService userService) {
-        this.userService = userService;
+    public void loginUser(HttpServletRequest request, int id) {
+        HttpSession session = request.getSession();
+        session.setAttribute(LOGGED, true);
+        session.setAttribute(USER_ID, id);
+        session.setAttribute(REMOTE_IP, request.getRemoteAddr());
     }
 
-    public static User tryGetUser(HttpSession session){
-        User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser == null){
-            throw new AuthenticationFailureException("The requested resource requires authentication");
-        }
-        return currentUser;
+    public int getLoggedUserId(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        checkIfUserIsLogged(request);
+        return (int) session.getAttribute(USER_ID);
     }
 
-    public User verifyAuthentication(String email, String password){
-        try{
-            User user = userService.getUserByEmail(email);
-            if (!user.getPassword().equals(password)){
-                throw new AuthenticationFailureException(AUTHENTICATION_FAILURE_MESSAGE);
-            }
-            return user;
-        } catch (EntityNotFoundException ignored){
-            throw new AuthenticationFailureException(AUTHENTICATION_FAILURE_MESSAGE);
+    public void checkIfUserIsLogged(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String IP = request.getRemoteAddr();
+
+        if(session.isNew() || session.getAttribute(LOGGED) == null
+                || !(boolean) session.getAttribute(LOGGED) || !session.getAttribute(REMOTE_IP).equals(IP)){
+            throw new UnauthorizedException("You have to login!");
         }
     }
 }
