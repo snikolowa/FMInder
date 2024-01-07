@@ -2,6 +2,9 @@ package com.example.fminder.models;
 
 import com.example.fminder.models.enums.RequestStatus;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,10 +19,11 @@ public class Request {
     private int senderId;
     @Column(name = "receiver_user_id")
     private int receiverId;
-
+    @CreationTimestamp
     @Column(name = "created_on")
     private LocalDateTime timeCreated;
 
+    @UpdateTimestamp
     @Column(name = "updated_on")
     private LocalDateTime timeUpdated;
     @Enumerated(EnumType.STRING)

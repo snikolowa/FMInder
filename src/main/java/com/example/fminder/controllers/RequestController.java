@@ -1,13 +1,15 @@
 package com.example.fminder.controllers;
 
 import com.example.fminder.exceptions.UnauthorizedException;
+import com.example.fminder.helpers.AuthenticationHelper;
+import com.example.fminder.models.DTOs.CreateRequestDto;
+import com.example.fminder.models.Request;
 import com.example.fminder.models.User;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,5 +24,11 @@ public class RequestController extends BaseController {
         }
 
         return new ResponseEntity<>(requestService.getRequests(id), HttpStatus.OK);
+    }
+
+    @PostMapping("/requests")
+    public ResponseEntity<Request> createRequest(@Valid @RequestBody CreateRequestDto createRequestDto, HttpServletRequest request) {
+        int currentUserId = authenticationHelper.getLoggedUserId(request);
+        return new ResponseEntity<>(requestService.create(currentUserId, createRequestDto.getReceiverUserId()), HttpStatus.CREATED);
     }
 }
