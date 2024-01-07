@@ -6,6 +6,9 @@ import com.example.fminder.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -61,5 +64,15 @@ public class UserService {
 
         existingUser.setPassword(user.getPassword());
         return userRepository.save(existingUser);
+    }
+
+    public List<User> getPotentialMatches(int userId) {
+        User currentUser = userRepository.getUserById(userId);
+        List<User> potentialMatches = userRepository.findAllByIdIsNot(userId);
+
+        potentialMatches.sort(Comparator.comparingInt(user ->
+                Math.abs(user.getGraduateYear() - currentUser.getGraduateYear())));
+
+        return potentialMatches;
     }
 }

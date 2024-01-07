@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class UserController extends BaseController{
 
@@ -32,4 +34,9 @@ public class UserController extends BaseController{
         return new ResponseEntity<>(userService.changePassword(userId, user), HttpStatus.OK);
     }
 
+    @GetMapping("/matches")
+    public ResponseEntity<List<User>> getPotentialMatches(HttpServletRequest request) {
+        int userId = authenticationHelper.getLoggedUserId(request);
+        return new ResponseEntity<>(userService.getPotentialMatches(userId), HttpStatus.OK);
+    }
 }
