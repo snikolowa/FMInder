@@ -2,6 +2,7 @@ package com.example.fminder.services;
 
 import com.example.fminder.exceptions.BadRequestException;
 import com.example.fminder.exceptions.NotFoundException;
+import com.example.fminder.exceptions.UnauthorizedException;
 import com.example.fminder.models.Request;
 import com.example.fminder.models.User;
 import com.example.fminder.models.enums.RequestStatus;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RequestService {
@@ -26,6 +28,7 @@ public class RequestService {
     }
 
     public List<User> getRequests(int id) {
+        // TODO return request ids too
         List<Long> userIds = requestRepository.findReceiverIdsBySenderUserId(id);
         List<User> users = userRepository.findAllById(userIds);
 
@@ -54,5 +57,17 @@ public class RequestService {
 
         // Save the new Request entity
         return requestRepository.save(newRequest);
+    }
+
+    public Request update(long id, String status, int userId) {
+        Optional<Request> optionalRequest = requestRepository.findById(id);
+        Request request = optionalRequest.orElseThrow(() -> new NotFoundException("Request not found!"));
+        if (request.getReceiverId() != userId) {
+            throw new UnauthorizedException("Unauthorized action!");
+        }
+
+        request.setStatus(RequestStatus.valueOf(status));
+        return requestRepository.save(request);
+
     }
 }
