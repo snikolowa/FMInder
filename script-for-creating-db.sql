@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS requests (
                                         receiver_user_id INT,
                                         created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                         updated_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                                        status ENUM('Pending', 'Accepted', 'Denied') NOT NULL,
+                                        status ENUM('Pending', 'Accepted', 'Denied') DEFAULT 'Pending' NOT NULL,
     FOREIGN KEY (sender_user_id) REFERENCES users(user_id),
     FOREIGN KEY (receiver_user_id) REFERENCES users(user_id)
     );

@@ -22,6 +22,7 @@ public class Request {
 
     @Column(name = "updated_on")
     private LocalDateTime timeUpdated;
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private RequestStatus status;
 
