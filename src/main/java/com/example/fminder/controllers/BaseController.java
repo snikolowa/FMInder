@@ -5,6 +5,7 @@ import com.example.fminder.exceptions.UnauthorizedException;
 import com.example.fminder.exceptions.BadRequestException;
 import com.example.fminder.helpers.AuthenticationHelper;
 import com.example.fminder.services.AuthenticationService;
+import com.example.fminder.services.RequestService;
 import com.example.fminder.services.UserService;
 import com.example.fminder.helpers.ErrorObj;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public abstract class BaseController {
 
     @Autowired
     public AuthenticationHelper authenticationHelper;
+
+    @Autowired
+    public RequestService requestService;
 
     @ExceptionHandler(value = BadRequestException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
