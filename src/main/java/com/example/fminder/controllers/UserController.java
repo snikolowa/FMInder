@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -33,6 +34,14 @@ public class UserController extends BaseController{
         int userId = authenticationHelper.getLoggedUserId(request);
         return new ResponseEntity<>(userService.changePassword(userId, user), HttpStatus.OK);
     }
+
+    @PostMapping("/users/profile/upload-picture")
+    public ResponseEntity<String> uploadProfileImage(@RequestParam(value = "file") MultipartFile file, HttpServletRequest request){
+        int userId = authenticationHelper.getLoggedUserId(request);
+        return new ResponseEntity<>("Uploaded picture: " +
+                userService.uploadProfilePicture(file, userId), HttpStatus.OK);
+    }
+
 
     @GetMapping("/matches")
     public ResponseEntity<List<User>> getPotentialMatches(HttpServletRequest request) {

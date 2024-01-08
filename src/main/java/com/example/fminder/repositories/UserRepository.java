@@ -11,6 +11,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User getUserById(int id);
 
     User getUserByEmail(String email);
+
     List<User> findAllByIdIsNot(int userId);
 
 }

@@ -5,14 +5,20 @@ import com.example.fminder.models.User;
 import com.example.fminder.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+
+    public static final String INVALID_FORMAT_OF_THE_PICTURE = "Invalid format of the picture";
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -75,4 +81,22 @@ public class UserService {
 
         return potentialMatches;
     }
+
+    public String uploadProfilePicture(MultipartFile file, int userId) {
+        User user = userRepository.getUserById(userId);
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        if(!(fileName.endsWith(".jpeg") || fileName.endsWith(".jpg")) || fileName.endsWith(".png")){
+            throw new IllegalArgumentException(INVALID_FORMAT_OF_THE_PICTURE);
+        }
+        try {
+            user.setProfilePicture(Base64.getEncoder().encodeToString(file.getBytes()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        userRepository.save(user);
+        return fileName;
+    }
+
+
 }
