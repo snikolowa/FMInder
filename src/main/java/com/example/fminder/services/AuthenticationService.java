@@ -33,7 +33,7 @@ public class AuthenticationService {
     public User login(User loginUser) {
         User user = userRepository.getUserByEmail(loginUser.getEmail());
 
-        if (user == null){
+        if (user == null) {
             throw new NotFoundException("User not found!");
         }
 
