@@ -4,6 +4,8 @@ import com.example.fminder.exceptions.BadRequestException;
 import com.example.fminder.exceptions.NotFoundException;
 import com.example.fminder.models.User;
 import com.example.fminder.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,8 @@ public class AuthenticationService {
 
     @Autowired
     private UserRepository userRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     public User register(User registerUser) {
 
@@ -40,6 +44,8 @@ public class AuthenticationService {
         if (!Objects.equals(loginUser.getPassword(), user.getPassword())) {
             throw new BadRequestException("Wrong credentials!");
         }
+
+        logger.info("User with id {} is logged.", loginUser.getId());
 
         return user;
     }

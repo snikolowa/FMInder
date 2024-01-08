@@ -12,6 +12,8 @@ import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class UserService {
@@ -19,6 +21,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     public static final String INVALID_FORMAT_OF_THE_PICTURE = "Invalid format of the picture";
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     public UserService(UserRepository userRepository) {
