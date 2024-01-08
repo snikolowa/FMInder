@@ -1,5 +1,6 @@
 body {
     background-color: #f4f4f4;
+    margin: 40px 0;
 }
 
 .container {
@@ -10,36 +11,43 @@ body {
     justify-content: center;
     margin: 0 auto;
     max-width: 1200px;
-    height: 100vh;
     box-sizing: border-box;
 }
 
-.login-container {
+.login-container,
+.match-container {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
     text-align: center;
+    margin-top: 20px;
+    max-width: 300px;
 }
 
-input, select {
+input,
+select,
+button,
+.action-buttons button,
+.profile-actions button,
+.profile-user-actions button {
     width: 100%;
     padding: 10px;
-    margin-bottom: 15px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
+    border: none;
     border-radius: 4px;
+    cursor: pointer;
+}
+
+input,
+select {
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
 }
 
 button {
     background-color: #7F0799;
     color: #fff;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
 }
 
 h1 {
@@ -52,20 +60,22 @@ h2 {
     font-size: 1.75rem;
     margin-bottom: 20px;
     color: #292E1E;
+    text-align: center;
 }
 
+/* Specific styles for match and profile sections */
+
 .match-container {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    margin-bottom: 50px;
     width: 400px;
+    margin-bottom: 50px;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
 .requests-list li,
-.potential-matches-list li {
+.potential-matches-list li,
+.matches-list li,
+.matches-section li {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -73,35 +83,73 @@ h2 {
     padding: 8px 0;
 }
 
-.profile-info {
+.profile-info,
+.profile-user-info {
     display: flex;
     align-items: center;
     text-align: left;
 }
 
-.profile-info img {
+.profile-info img,
+.profile-user-info img {
     width: 60px;
     height: 60px;
     border-radius: 50%;
     margin-right: 15px;
 }
 
-.action-buttons {
+.action-buttons,
+.profile-actions,
+.profile-user-actions {
     display: flex;
     gap: 10px;
 }
 
-.action-buttons button {
-    background-color: #7F0799;
-    color: #fff;
-    padding: 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+button.remove-match-button {
+    background-color: #d9534f;
 }
 
 button.decline-button {
     background-color: #fff;
     color: #7F0799;
     border: 2px solid #7F0799;
+}
+
+.profile-section {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.profile-section .profile-user-info {
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.profile-section .profile-user-info img {
+    margin: 0 0 16px 0;
+}
+
+.profile-section .user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.profile-user-actions {
+    margin-top: 40px;
+    flex-direction: column;
+}
+
+.profile-user-actions button {
+    background-color: #7F0799;
+}
+
+.profile-user-actions button.logout-button {
+    background-color: #fff;
+    color: #d9534f;
+    border: 1px solid #d9534f;
 }
