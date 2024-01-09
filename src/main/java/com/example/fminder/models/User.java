@@ -4,6 +4,7 @@ import com.example.fminder.models.enums.Gender;
 import com.example.fminder.models.enums.Major;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -37,12 +38,12 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @NotBlank(message = "Gender is required")
+    @NotNull(message = "Gender is required")
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
     private Gender gender;
 
-    @NotBlank(message = "Graduation year is required")
+    @NotNull(message = "Graduation year is required")
     @Column(name = "graduate_year")
     private int graduateYear;
 
