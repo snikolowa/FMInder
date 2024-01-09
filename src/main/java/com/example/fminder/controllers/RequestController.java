@@ -4,6 +4,7 @@ import com.example.fminder.exceptions.BadRequestException;
 import com.example.fminder.exceptions.UnauthorizedException;
 import com.example.fminder.helpers.AuthenticationHelper;
 import com.example.fminder.models.DTOs.CreateRequestDto;
+import com.example.fminder.models.DTOs.RequestUserDTO;
 import com.example.fminder.models.Request;
 import com.example.fminder.models.User;
 import com.example.fminder.models.enums.RequestStatus;
@@ -19,7 +20,7 @@ import java.util.List;
 public class RequestController extends BaseController {
 
     @GetMapping("/users/{id}/requests")
-    public ResponseEntity<List<User>> getRequestOfUserById(@PathVariable int id, HttpServletRequest request){
+    public ResponseEntity<List<RequestUserDTO>> getRequestOfUserById(@PathVariable int id, HttpServletRequest request){
         int userId = authenticationHelper.getLoggedUserId(request);
         if (userId != id) {
             throw new UnauthorizedException("You don't have access to this resource!");
