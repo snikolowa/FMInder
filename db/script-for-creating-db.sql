@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users
     first_name      VARCHAR(255)                     NOT NULL,
     last_name       VARCHAR(255)                     NOT NULL,
     gender          ENUM ('Male', 'Female', 'Other') NOT NULL,
-    graduate_year   INT,
+    graduate_year   INT                              NOT NULL,
     major           VARCHAR(255),
     profile_picture VARCHAR(2048),
     interests       TEXT
