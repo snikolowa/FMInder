@@ -20,13 +20,12 @@ import java.util.Optional;
 public class RequestService {
 
     private final RequestRepository requestRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    public RequestService(RequestRepository requestRepository) {
+    public RequestService(RequestRepository requestRepository, UserRepository userRepository) {
         this.requestRepository = requestRepository;
+        this.userRepository = userRepository;
     }
 
     public List<RequestUserDTO> getRequests(int id) {

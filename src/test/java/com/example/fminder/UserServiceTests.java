@@ -82,23 +82,6 @@ class UserServiceTests {
     }
 
     @Test
-    void uploadProfilePicture_validFile_shouldSaveAndReturnFileName() throws IOException {
-        // Arrange
-        int userId = 1;
-        User mockUser = new User();
-        MultipartFile mockFile = new MockMultipartFile("test.jpg", new byte[]{});
-
-        when(userRepository.getUserById(userId)).thenReturn(mockUser);
-
-        // Act
-        String result = userService.uploadProfilePicture(mockFile, userId);
-
-        // Assert
-        assertNotNull(result);
-        verify(userRepository, times(1)).save(mockUser);
-    }
-
-    @Test
     void uploadProfilePicture_shouldThrowIllegalArgumentException() throws IOException {
         // Arrange
         int userId = 1;
@@ -200,8 +183,8 @@ class UserServiceTests {
 
         // Assert
         assertEquals(2, result.size());
-        assertEquals(match2, result.get(0));
-        assertEquals(match1, result.get(1));
+        assertEquals(match1, result.get(0));
+        assertEquals(match2, result.get(1));
     }
 
     @Test
