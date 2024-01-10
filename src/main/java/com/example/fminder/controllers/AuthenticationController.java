@@ -24,10 +24,14 @@ public class AuthenticationController extends BaseController{
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@Valid @RequestBody User loginUser, HttpServletRequest request) {
+    public ResponseEntity<User> login(@RequestBody User loginUser, HttpServletRequest request) {
         if (request.getSession().getAttribute(AuthenticationHelper.LOGGED) != null && (boolean) request.getSession().getAttribute(AuthenticationHelper.LOGGED)) {
             throw new BadRequestException("You are already logged in");
         }
+        if (loginUser.getEmail() == null || loginUser.getPassword() == null) {
+            throw new BadRequestException("Email and password are required fields!");
+        }
+
         loginUser.setEmail(loginUser.getEmail().trim());
         loginUser.setPassword(loginUser.getPassword().trim());
 

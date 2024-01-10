@@ -3,6 +3,7 @@ package com.example.fminder.services;
 import com.example.fminder.exceptions.BadRequestException;
 import com.example.fminder.exceptions.NotFoundException;
 import com.example.fminder.exceptions.UnauthorizedException;
+import com.example.fminder.models.DTOs.RequestUserDTO;
 import com.example.fminder.models.Request;
 import com.example.fminder.models.User;
 import com.example.fminder.models.enums.RequestStatus;
@@ -11,6 +12,7 @@ import com.example.fminder.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,12 +29,25 @@ public class RequestService {
         this.requestRepository = requestRepository;
     }
 
-    public List<User> getRequests(int id) {
+    public List<RequestUserDTO> getRequests(int id) {
         // TODO return request ids too
-        List<Long> userIds = requestRepository.findReceiverIdsBySenderUserId(id);
+        List<Long> userIds = requestRepository.findSenderIdsByReceiverUserId(id);
         List<User> users = userRepository.findAllById(userIds);
+        List<Request> requests = requestRepository.findAllPendingRequestsByReceiverUserId(id);
 
-        return users;
+        List<RequestUserDTO> result = new ArrayList<>();
+        for (Request request : requests) {
+            User matchingUser = users.stream()
+                    .filter(user -> user.getId() == request.getSenderId())
+                    .findFirst()
+                    .orElse(null);
+
+            if (matchingUser != null) {
+                result.add(new RequestUserDTO(matchingUser, request));
+            }
+        }
+
+        return result;
     }
 
     public Request create(int currentUserId, int receiverUserId) {
