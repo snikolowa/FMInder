@@ -15,7 +15,8 @@ body {
 }
 
 .login-container,
-.match-container {
+.match-container,
+.edit-container {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -130,13 +131,24 @@ button.decline-button {
 }
 
 .profile-section .profile-user-info img {
-    margin: 0 0 16px 0;
+    margin: 0;
 }
 
-.profile-section .user-info {
+.profile-info span {
+    max-width: 86px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+}
+
+.profile-section .user-info,
+.form-controls {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    align-items: center;
 }
 
 .profile-user-actions {
@@ -148,7 +160,8 @@ button.decline-button {
     background-color: #7F0799;
 }
 
-.profile-user-actions button.logout-button {
+.profile-user-actions button.logout-button,
+.discard-button {
     background-color: #fff;
     color: #d9534f;
     border: 1px solid #d9534f;

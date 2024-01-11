@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="../assets/styles/reset.css">
+    <link rel="stylesheet" href="../assets/styles/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>FMInder</h1>
+        <div class="edit-container">
+            <h2>Edit Profile Info</h2>
+            <form class="edit-info-form" id="edit-info-form">
+                <input type="email" name="email" placeholder="Email">
+                <input type="password" name="password" placeholder="Password">
+                <input type="password" name="repeat-password" placeholder="Repeat Password">
+                <input type="text" name="first-name" placeholder="First Name">
+                <input type="text" name="last-name" placeholder="Last Name">
+                <select name="gender">
+                    <option value="" disabled selected>Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+                <input type="text" name="class-year" placeholder="Class of (year)" pattern="[0-9]{4}" title="Enter a year between 2000 and 2028">
+                <select name="major">
+                    <option value="" disabled selected>Major in</option>
+                    <option value="Data Analysis">Data Analysis</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Applied Mathematics">Applied Mathematics</option>
+                    <option value="Statistics">Statistics</option>
+                    <option value="Informatics">Informatics</option>
+                    <option value="Information Systems">Information Systems</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Software Engineering">Software Engineering</option>
+                </select>
+                <input type="text" name="interests" placeholder="Interests">
+                <div class="form-controls">
+                    <button type="submit">Save Changes</button>
+                    <button class="discard-button" id="discard-button">Discard</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+<script src="../assets/scripts/editProfile.js"></script>
+</html>

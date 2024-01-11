@@ -38,8 +38,8 @@
         <div class="profile-section">
             <h2>Profile Information</h2>
             <div class="profile-user-info">
-                <img src="../assets/images/placeholder.png" alt="Profile Picture">
-                <div class="user-info">
+                <div class="user-info" id="user-info">
+                    <img src="../assets/images/placeholder.png" alt="Profile Picture">
                     <h3>User's Name</h3>
                     <p>Female</p>
                     <p>Class of 2024</p>
@@ -48,10 +48,11 @@
                 </div>
             </div>
             <div class="profile-user-actions">
-                <button class="edit-info-button">Edit Info</button>
-                <button class="logout-button">Logout</button>
+                <a href="editProfile.html"><button class="edit-info-button">Edit Info</button></a>
+                <button class="logout-button" id="logout-button">Logout</button>
             </div>
         </div>
     </div>
 </body>
+<script src="../assets/scripts/logout.js"></script>
 </html>
