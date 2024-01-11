@@ -1,13 +1,11 @@
-package com.example.fminder.controllers;
+package com.example.fminder.controllers.rest;
 
+import com.example.fminder.controllers.rest.BaseController;
 import com.example.fminder.exceptions.BadRequestException;
 import com.example.fminder.exceptions.UnauthorizedException;
-import com.example.fminder.helpers.AuthenticationHelper;
 import com.example.fminder.models.DTOs.CreateRequestDto;
 import com.example.fminder.models.DTOs.RequestUserDTO;
 import com.example.fminder.models.Request;
-import com.example.fminder.models.User;
-import com.example.fminder.models.enums.RequestStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

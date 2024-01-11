@@ -1,4 +1,4 @@
-package com.example.fminder.controllers;
+package com.example.fminder.controllers.rest;
 
 import com.example.fminder.models.User;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-public class UserController extends BaseController{
+public class UserController extends BaseController {
 
     @GetMapping("/users/{id}")
     public ResponseEntity<User> getUserById(@PathVariable int id){

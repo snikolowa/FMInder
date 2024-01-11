@@ -1,4 +1,4 @@
-package com.example.fminder.controllers;
+package com.example.fminder.controllers.rest;
 
 import com.example.fminder.exceptions.BadRequestException;
 import com.example.fminder.helpers.AuthenticationHelper;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class AuthenticationController extends BaseController{
+public class AuthenticationController extends BaseController {
 
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@Valid @RequestBody User registerUser) {

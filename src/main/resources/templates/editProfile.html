@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
-    <link rel="stylesheet" href="../assets/styles/reset.css">
-    <link rel="stylesheet" href="../assets/styles/style.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 </head>
 <body>
     <div class="container">
@@ -45,5 +45,5 @@
         </div>
     </div>
 </body>
-<script src="../assets/scripts/editProfile.js"></script>
+<script th:src="@{/js/editProfile.js}"></script>
 </html>

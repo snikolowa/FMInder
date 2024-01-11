@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile</title>
-    <link rel="stylesheet" href="../assets/styles/reset.css">
-    <link rel="stylesheet" href="../assets/styles/style.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 </head>
 
 <body>
@@ -17,7 +17,7 @@
             <ul class="matches-list">
                 <li>
                     <div class="profile-info">
-                        <img src="../assets/images/placeholder.png" alt="Profile Picture">
+                        <img src="../static/assets/placeholder.png" alt="Profile Picture">
                         <span>User A</span>
                     </div>
                     <div class="action-buttons">
@@ -26,7 +26,7 @@
                 </li>
                 <li>
                     <div class="profile-info">
-                        <img src="../assets/images/placeholder.png" alt="Profile Picture">
+                        <img src="../static/assets/placeholder.png" alt="Profile Picture">
                         <span>User A</span>
                     </div>
                     <div class="action-buttons">
@@ -39,7 +39,7 @@
             <h2>Profile Information</h2>
             <div class="profile-user-info">
                 <div class="user-info" id="user-info">
-                    <img src="../assets/images/placeholder.png" alt="Profile Picture">
+                    <img src="../static/assets/placeholder.png" alt="Profile Picture">
                     <h3>User's Name</h3>
                     <p>Female</p>
                     <p>Class of 2024</p>
@@ -54,5 +54,5 @@
         </div>
     </div>
 </body>
-<script src="../assets/scripts/logout.js"></script>
+<script th:src="@{/js/logout.js}"></script>
 </html>

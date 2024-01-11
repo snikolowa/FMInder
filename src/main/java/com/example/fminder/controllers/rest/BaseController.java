@@ -1,4 +1,4 @@
-package com.example.fminder.controllers;
+package com.example.fminder.controllers.rest;
 
 import com.example.fminder.exceptions.NotFoundException;
 import com.example.fminder.exceptions.UnauthorizedException;

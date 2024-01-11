@@ -1,5 +1,6 @@
-package com.example.fminder.controllers;
+package com.example.fminder.controllers.rest;
 
+import com.example.fminder.controllers.rest.BaseController;
 import com.example.fminder.models.Message;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class ChatController extends BaseController{
+public class ChatController extends BaseController {
 
     @GetMapping("/chat/{receiverId}")
     public ResponseEntity<List<Message>> getChat(@PathVariable int receiverId, HttpServletRequest request){
