@@ -10,49 +10,25 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" id="container">
         <h1>FMInder</h1>
-        <div class="match-container">
-            <h2>My Matches</h2>
-            <ul class="matches-list">
-                <li>
-                    <div class="profile-info">
-                        <img src="../static/assets/placeholder.png" alt="Profile Picture">
-                        <span>User A</span>
-                    </div>
-                    <div class="action-buttons">
-                        <button class="remove-match-button">Remove</button>
-                    </div>
-                </li>
-                <li>
-                    <div class="profile-info">
-                        <img src="../static/assets/placeholder.png" alt="Profile Picture">
-                        <span>User A</span>
-                    </div>
-                    <div class="action-buttons">
-                        <button class="remove-match-button">Remove</button>
-                    </div>
-                </li>
-            </ul>
-        </div>
+<!--        <div class="match-container">-->
+<!--            <h2>My Matches</h2>-->
+<!--            <ul class="matches-list">-->
+<!--            </ul>-->
+<!--        </div>-->
         <div class="profile-section">
             <h2>Profile Information</h2>
             <div class="profile-user-info">
                 <div class="user-info" id="user-info">
-                    <img src="../static/assets/placeholder.png" alt="Profile Picture">
-                    <h3>User's Name</h3>
-                    <p>Female</p>
-                    <p>Class of 2024</p>
-                    <p>Major in Computer Science</p>
-                    <p>Interests: Coding, Reading</p>
                 </div>
             </div>
             <div class="profile-user-actions">
-                <a href="editProfile.html"><button class="edit-info-button">Edit Info</button></a>
-                <button class="logout-button" id="logout-button">Logout</button>
             </div>
         </div>
     </div>
 </body>
+<script th:src="@{/js/matches.js}"></script>
+<script th:src="@{/js/profile.js}"></script>
 <script th:src="@{/js/logout.js}"></script>
 </html>

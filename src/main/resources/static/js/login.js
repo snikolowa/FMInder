@@ -18,8 +18,15 @@ document.getElementById('loginForm').addEventListener('submit', async function (
             body: JSON.stringify(user),
         });
 
-        const data = await response.json();
-        console.log('User logged in:', data);
+        if (response.ok) {
+            const userData = await response.json();
+
+            sessionStorage.setItem('userId', userData.id);
+
+            window.location.href = '/api/matches';
+        } else {
+            console.error('Login failed:', response.statusText);
+        }
     } catch (error) {
         console.error('Login failed:', error);
     }
