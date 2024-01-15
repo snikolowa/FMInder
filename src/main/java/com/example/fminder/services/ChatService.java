@@ -29,4 +29,8 @@ public class ChatService {
 
         return chatRepository.save(message);
     }
+
+    public List<Message> getLastMessagesWithEachUser(int currentUserId){
+        return chatRepository.getLastMessagesWithEachUser(currentUserId);
+    }
 }

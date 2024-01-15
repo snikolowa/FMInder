@@ -26,4 +26,11 @@ public class ChatController extends BaseController {
 
         return new ResponseEntity<>(chatService.saveMessage(message, currentUserId, receiverId), HttpStatus.CREATED);
     }
+
+    @GetMapping("/chat")
+    public ResponseEntity<List<Message>> getLastMessagesWithEachUser(HttpServletRequest request){
+        int currentUserId = authenticationHelper.getLoggedUserId(request);
+
+        return new ResponseEntity<>(chatService.getLastMessagesWithEachUser(currentUserId), HttpStatus.OK);
+    }
 }
