@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 public class UserController extends BaseController {
@@ -36,10 +37,10 @@ public class UserController extends BaseController {
     }
 
     @PostMapping("/users/profile/upload-picture")
-    public ResponseEntity<String> uploadProfileImage(@RequestParam(value = "file") MultipartFile file, HttpServletRequest request){
+    public CompletableFuture<ResponseEntity<String>> uploadProfileImage(@RequestParam(value = "file") MultipartFile file, HttpServletRequest request){
         int userId = authenticationHelper.getLoggedUserId(request);
-        return new ResponseEntity<>("Uploaded picture: " +
-                userService.uploadProfilePicture(file, userId), HttpStatus.OK);
+        return userService.uploadProfilePicture(file, userId)
+                .thenApply(fileName -> new ResponseEntity<>("Uploaded picture: " + fileName, HttpStatus.OK));
     }
 
 

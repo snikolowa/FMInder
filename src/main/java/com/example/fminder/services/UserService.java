@@ -4,14 +4,18 @@ import com.example.fminder.exceptions.NotFoundException;
 import com.example.fminder.models.User;
 import com.example.fminder.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,10 +33,10 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User getUserById(int id){
+    public User getUserById(int id) {
         User user = userRepository.getUserById(id);
 
-        if (user == null){
+        if (user == null) {
             throw new NotFoundException("User not found!");
         }
 
@@ -42,7 +46,7 @@ public class UserService {
     public User getUserByEmail(String email) {
         User user = userRepository.getUserByEmail(email);
 
-        if (user == null){
+        if (user == null) {
             throw new NotFoundException("User not found!");
         }
 
@@ -55,14 +59,14 @@ public class UserService {
         if (existingUser == null) {
             throw new NotFoundException("User not found!");
         }
-            existingUser.setFirstName(updatedUser.getFirstName());
-            existingUser.setLastName(updatedUser.getLastName());
-            existingUser.setGender(updatedUser.getGender());
-            existingUser.setMajor(updatedUser.getMajor());
-            existingUser.setGraduateYear(updatedUser.getGraduateYear());
-            existingUser.setInterests(updatedUser.getInterests());
+        existingUser.setFirstName(updatedUser.getFirstName());
+        existingUser.setLastName(updatedUser.getLastName());
+        existingUser.setGender(updatedUser.getGender());
+        existingUser.setMajor(updatedUser.getMajor());
+        existingUser.setGraduateYear(updatedUser.getGraduateYear());
+        existingUser.setInterests(updatedUser.getInterests());
 
-            return userRepository.save(existingUser);
+        return userRepository.save(existingUser);
     }
 
     public User changePassword(int userId, User user) {
@@ -86,10 +90,11 @@ public class UserService {
         return potentialMatches;
     }
 
-    public String uploadProfilePicture(MultipartFile file, int userId) {
+    @Async
+    public CompletableFuture<String> uploadProfilePicture(MultipartFile file, int userId) {
         User user = userRepository.getUserById(userId);
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        if(!fileName.endsWith(".jpeg") && !fileName.endsWith(".jpg") && !fileName.endsWith(".png")) {
+        if (!fileName.endsWith(".jpeg") && !fileName.endsWith(".jpg") && !fileName.endsWith(".png")) {
             throw new IllegalArgumentException(INVALID_FORMAT_OF_THE_PICTURE);
         }
         try {
@@ -99,6 +104,6 @@ public class UserService {
         }
 
         userRepository.save(user);
-        return fileName;
+        return CompletableFuture.completedFuture(fileName);
     }
 }
