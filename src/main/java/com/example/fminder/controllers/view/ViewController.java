@@ -32,4 +32,9 @@ public class ViewController {
     public String showMatchesPage(){
         return "matches";
     }
+
+    @GetMapping("/profile/edit")
+    public String showEditProfilePage(){
+        return "editProfile";
+    }
 }
