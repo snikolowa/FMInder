@@ -41,3 +41,5 @@ CREATE TABLE IF NOT EXISTS chats
     FOREIGN KEY (receiver_id) REFERENCES users (user_id),
     FOREIGN KEY (sender_id) REFERENCES users (user_id)
 );
+
+ALTER TABLE users MODIFY COLUMN profile_picture BLOB;

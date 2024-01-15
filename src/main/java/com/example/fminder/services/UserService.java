@@ -89,7 +89,7 @@ public class UserService {
     public String uploadProfilePicture(MultipartFile file, int userId) {
         User user = userRepository.getUserById(userId);
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
-        if(!(fileName.endsWith(".jpeg") || fileName.endsWith(".jpg")) || fileName.endsWith(".png")){
+        if(!fileName.endsWith(".jpeg") && !fileName.endsWith(".jpg") && !fileName.endsWith(".png")) {
             throw new IllegalArgumentException(INVALID_FORMAT_OF_THE_PICTURE);
         }
         try {
@@ -101,6 +101,4 @@ public class UserService {
         userRepository.save(user);
         return fileName;
     }
-
-
 }
