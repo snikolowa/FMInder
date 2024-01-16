@@ -18,4 +18,16 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     @Query("SELECT r FROM Request r WHERE r.receiverId = :receiverUserId AND r.status = 'Pending'")
     List<Request> findAllPendingRequestsByReceiverUserId(int receiverUserId);
+
+    @Query("SELECT DISTINCT \n" +
+            "    CASE \n" +
+            "        WHEN r.receiverId = :currentUserId THEN r.senderId\n" +
+            "        WHEN r.senderId = :currentUserId THEN r.receiverId\n" +
+            "    END AS userId\n" +
+            "FROM \n" +
+            "    Request r\n" +
+            "WHERE \n" +
+            "    (r.receiverId = :currentUserId OR r.senderId = :currentUserId) \n" +
+            "    AND (r.status = 'Accepted' OR r.status = 'Pending')")
+    List<Long> getUserIdsOfAcceptedOrPendingRequest(int currentUserId);
 }

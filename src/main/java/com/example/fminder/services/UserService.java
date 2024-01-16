@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,11 +108,26 @@ public class UserService {
     public List<User> getPotentialMatches(int userId) {
         User currentUser = userRepository.getUserById(userId);
         List<User> potentialMatches = userRepository.findAllByIdIsNot(userId);
+        List<Long> alreadySendOrAcceptedRequestUserIds = requestRepository.getUserIdsOfAcceptedOrPendingRequest(userId);
+        List<User> users = new ArrayList<>();
 
-        potentialMatches.sort(Comparator.comparingInt(user ->
+        for (User user : potentialMatches) {
+            boolean isMatchAlready = false;
+            for (Long id : alreadySendOrAcceptedRequestUserIds) {
+                if (user.getId() == id) {
+                    isMatchAlready = true;
+                    break;
+                }
+            }
+            if (!isMatchAlready) {
+                users.add(user);
+            }
+        }
+
+        users.sort(Comparator.comparingInt(user ->
                 Math.abs(user.getGraduateYear() - currentUser.getGraduateYear())));
 
-        return potentialMatches;
+        return users;
     }
 
     @Async
