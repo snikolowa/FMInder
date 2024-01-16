@@ -7,6 +7,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         const chatData = await response.json();
 
         for (const message of chatData) {
+            if (message.senderId == userId) {
+                continue;
+            }
+
             console.log(message);
             const userResponse = await fetch(`/users/${message.senderId}`);
             const userData = await userResponse.json();
