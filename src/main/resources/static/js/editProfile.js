@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     console.log(userData);
     let editInfoForm = document.getElementById('edit-info-form');
 
+    editInfoForm.elements['profile-picture'].value = userData.profilePicture;
     editInfoForm.elements['email'].value = userData.email;
     editInfoForm.elements['first-name'].value = userData.firstName;
     editInfoForm.elements['last-name'].value = userData.lastName;
@@ -28,6 +29,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         e.preventDefault();
 
         const updatedUserData = {
+            profilePicture: editInfoForm.elements['profile-picture'].value,
             email: editInfoForm.elements['email'].value,
             password: editInfoForm.elements['password'].value,
             repeatPassword: editInfoForm.elements['repeat-password'].value,
@@ -60,6 +62,7 @@ async function getUserData(userId) {
 
 async function saveChanges(updatedUserData) {
     try {
+        console.log(updatedUserData);
         const response = await fetch(`/users/profile`, {
             method: 'PUT',
             headers: {

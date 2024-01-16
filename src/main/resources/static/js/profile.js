@@ -8,14 +8,21 @@ document.addEventListener('DOMContentLoaded', async function () {
     const profileInfo = document.getElementById('user-info');
     const buttonContainer = document.querySelector('.profile-user-actions');
 
-    window.addEventListener('beforeunload', function () {
-        const targetUrl = new URL(event.target.location.href);
+    window.addEventListener('unload', function () {
+        const targetUrl = new URL(document.referrer);
         const currentUrl = new URL(window.location.href);
 
         if (targetUrl.pathname !== currentUrl.pathname) {
-            sessionStorage.removeItem('matchId');
+            // Delay the removal to ensure it happens after the page has fully unloaded
+            setTimeout(function () {
+                // Check if the key exists before removing it
+                if (sessionStorage.getItem('matchId')) {
+                    sessionStorage.removeItem('matchId');
+                }
+            }, 0);
         }
     });
+
 
     try {
         const userData = await fetchUserData(isCurrentUserProfile);
@@ -99,7 +106,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     async function fetchUserData(isCurrentUserProfile) {
-        const response = await fetch(`/users/${isCurrentUserProfile ? userId : matchId}`);
+        const response = await fetch(`/users/${!isCurrentUserProfile ? userId : matchId}`);
         return await response.json();
     }
 
