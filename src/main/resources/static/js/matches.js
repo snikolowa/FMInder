@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             usernameAnchor.addEventListener('click', function (e) {
                 e.preventDefault();
 
-                sessionStorage.setItem('matchId', match.userId);
+                sessionStorage.setItem('matchId', match.id);
 
                 window.location.href = this.href;
             });

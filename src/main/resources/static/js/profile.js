@@ -2,47 +2,37 @@ document.addEventListener('DOMContentLoaded', async function () {
     const userId = sessionStorage.getItem('userId');
     const matchId = sessionStorage.getItem('matchId');
     console.log(matchId);
-    const isCurrentUserProfile = matchId !== null;
+    const isCurrentUserProfile = matchId === undefined || matchId === null;
     console.log(isCurrentUserProfile);
     const profileContainer = document.getElementById('container');
     const profileInfo = document.getElementById('user-info');
     const buttonContainer = document.querySelector('.profile-user-actions');
 
-    window.addEventListener('unload', function () {
-        const targetUrl = new URL(document.referrer);
-        const currentUrl = new URL(window.location.href);
-
-        if (targetUrl.pathname !== currentUrl.pathname) {
-            // Delay the removal to ensure it happens after the page has fully unloaded
-            setTimeout(function () {
-                // Check if the key exists before removing it
-                if (sessionStorage.getItem('matchId')) {
-                    sessionStorage.removeItem('matchId');
-                }
-            }, 0);
+    window.addEventListener('beforeunload', function (event) {
+        if (sessionStorage.getItem('matchId')) {
+            sessionStorage.removeItem('matchId');
         }
     });
-
 
     try {
         const userData = await fetchUserData(isCurrentUserProfile);
 
         updateProfileInfo(userData);
 
-        if (isCurrentUserProfile) {
+        if (!isCurrentUserProfile) {
             createButton('Message', 'message-button', messageButtonHandler);
             createButton('Unmatch', 'unmatch-button', unmatchButtonHandler);
         } else {
             createButton('Edit info', 'edit-info-button', editInfoButtonHandler);
-            createButton('Logout', 'logout-button');
+            createButton('Logout', 'logout-button', logoutButtonHandler);
 
-            try {
-                const matchRequestsData = !isCurrentUserProfile ? await fetchMatchData(userId) : await fetchMatchData(matchId);
-
-                createMatchContainer(matchRequestsData);
-            } catch (error) {
-                console.error('Error fetching matches:', error);
-            }
+            // try {
+            //     const matchRequestsData = isCurrentUserProfile ? await fetchMatchData(userId) : await fetchMatchData(matchId);
+            //     console.log(matchRequestsData);
+            //     createMatchContainer(matchRequestsData);
+            // } catch (error) {
+            //     console.error('Error fetching matches:', error);
+            // }
         }
     } catch (error) {
         console.error('Error fetching user profile:', error);
@@ -106,12 +96,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     async function fetchUserData(isCurrentUserProfile) {
-        const response = await fetch(`/users/${!isCurrentUserProfile ? userId : matchId}`);
+        const response = await fetch(`/users/${isCurrentUserProfile ? userId : matchId}`);
         return await response.json();
     }
 
     async function fetchMatchData(id) {
-        const response = await fetch(`/matches`);
+        const response = await fetch(`/users/profile`);
         return await response.json();
     }
 
@@ -151,18 +141,44 @@ document.addEventListener('DOMContentLoaded', async function () {
         button.classList.add(className);
         button.textContent = label;
         buttonContainer.appendChild(button);
-        button.addEventListener('click', window[clickHandler]); // Attach the click handler
+
+        button.addEventListener('click', clickHandler);
     }
 
     function editInfoButtonHandler() {
+        console.log('Edit Info button clicked');
         window.location.href = '/api/profile/edit';
     }
 
+    function logoutButtonHandler() {
+        console.log('Logout button clicked');
+        (async function () {
+            try {
+                const response = await fetch('/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                window.location.href = '/api/login';
+            } catch (error) {
+                console.error('Logout failed:', error);
+            }
+        })();
+    }
+
     function messageButtonHandler() {
+        console.log('Message button clicked');
         window.location.href = '/api/matches';
     }
 
     function unmatchButtonHandler() {
+        console.log('Unmatch button clicked');
         window.location.href = '/api/matches';
     }
 });
