@@ -15,8 +15,8 @@ import java.util.concurrent.CompletableFuture;
 public class UserController extends BaseController {
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable int id){
-       return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
+    public ResponseEntity<User> getUserById(@PathVariable int id) {
+        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
 
     @GetMapping("/users/profile")
@@ -37,7 +37,7 @@ public class UserController extends BaseController {
     }
 
     @PostMapping("/users/profile/upload-picture")
-    public CompletableFuture<ResponseEntity<String>> uploadProfileImage(@RequestParam(value = "file") MultipartFile file, HttpServletRequest request){
+    public CompletableFuture<ResponseEntity<String>> uploadProfileImage(@RequestParam(value = "file") MultipartFile file, HttpServletRequest request) {
         int userId = authenticationHelper.getLoggedUserId(request);
         return userService.uploadProfilePicture(file, userId)
                 .thenApply(fileName -> new ResponseEntity<>("Uploaded picture: " + fileName, HttpStatus.OK));
@@ -48,5 +48,11 @@ public class UserController extends BaseController {
     public ResponseEntity<List<User>> getPotentialMatches(HttpServletRequest request) {
         int userId = authenticationHelper.getLoggedUserId(request);
         return new ResponseEntity<>(userService.getPotentialMatches(userId), HttpStatus.OK);
+    }
+
+    @GetMapping("/matched")
+    public ResponseEntity<List<User>> getMatches(HttpServletRequest request) {
+        int userId = authenticationHelper.getLoggedUserId(request);
+        return new ResponseEntity<>(userService.getMatches(userId), HttpStatus.OK);
     }
 }

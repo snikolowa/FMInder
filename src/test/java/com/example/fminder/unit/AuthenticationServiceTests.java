@@ -1,4 +1,4 @@
-package com.example.fminder;
+package com.example.fminder.unit;
 
 import com.example.fminder.exceptions.BadRequestException;
 import com.example.fminder.exceptions.NotFoundException;

@@ -1,4 +1,4 @@
-package com.example.fminder;
+package com.example.fminder.unit;
 
 import com.example.fminder.models.Message;
 import com.example.fminder.repositories.ChatRepository;

@@ -1,7 +1,9 @@
 package com.example.fminder.services;
 
 import com.example.fminder.exceptions.NotFoundException;
+import com.example.fminder.models.Request;
 import com.example.fminder.models.User;
+import com.example.fminder.repositories.RequestRepository;
 import com.example.fminder.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -10,10 +12,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Base64;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
@@ -24,13 +23,16 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final RequestRepository requestRepository;
+
     public static final String INVALID_FORMAT_OF_THE_PICTURE = "Invalid format of the picture";
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, RequestRepository requestRepository) {
         this.userRepository = userRepository;
+        this.requestRepository = requestRepository;
     }
 
     public User getUserById(int id) {
@@ -59,12 +61,34 @@ public class UserService {
         if (existingUser == null) {
             throw new NotFoundException("User not found!");
         }
-        existingUser.setFirstName(updatedUser.getFirstName());
-        existingUser.setLastName(updatedUser.getLastName());
-        existingUser.setGender(updatedUser.getGender());
-        existingUser.setMajor(updatedUser.getMajor());
-        existingUser.setGraduateYear(updatedUser.getGraduateYear());
-        existingUser.setInterests(updatedUser.getInterests());
+        if (updatedUser.getFirstName() != null) {
+            existingUser.setFirstName(updatedUser.getFirstName());
+        }
+
+        if (updatedUser.getLastName() != null) {
+            existingUser.setLastName(updatedUser.getLastName());
+        }
+
+        if (updatedUser.getEmail() != null) {
+            existingUser.setEmail(updatedUser.getEmail());
+        }
+
+        if (updatedUser.getGender() != null) {
+            existingUser.setGender(updatedUser.getGender());
+        }
+
+        if (updatedUser.getMajor() != null) {
+            existingUser.setMajor(updatedUser.getMajor());
+        }
+
+        if (updatedUser.getGraduateYear() != 0) {
+            existingUser.setGraduateYear(updatedUser.getGraduateYear());
+        }
+
+        if (updatedUser.getInterests() != null) {
+            existingUser.setInterests(updatedUser.getInterests());
+        }
+
 
         return userRepository.save(existingUser);
     }
@@ -105,5 +129,15 @@ public class UserService {
 
         userRepository.save(user);
         return CompletableFuture.completedFuture(fileName);
+    }
+
+    public List<User> getMatches(int userId) {
+        List<Long> userIds = userRepository.findSenderIdsByReceiverUserId(userId);
+        List<User> matches = new ArrayList<>();
+
+        for (Long id: userIds){
+            matches.add(userRepository.getUserById(Math.toIntExact(id)));
+        }
+        return matches;
     }
 }

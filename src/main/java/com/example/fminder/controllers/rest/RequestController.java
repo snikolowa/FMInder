@@ -28,8 +28,8 @@ public class RequestController extends BaseController {
     }
 
     @PostMapping("/requests")
-    public ResponseEntity<Request> createRequest(@Valid @RequestBody CreateRequestDto createRequestDto, HttpServletRequest request) {
-        int currentUserId = authenticationHelper.getLoggedUserId(request);
+    public ResponseEntity<Request> createRequest(@Valid @RequestBody CreateRequestDto createRequestDto) {
+        int currentUserId = 1;
         return new ResponseEntity<>(requestService.create(currentUserId, createRequestDto.getReceiverUserId()), HttpStatus.CREATED);
     }
 
