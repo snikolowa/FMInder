@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         if (!isCurrentUserProfile) {
             createButton('Message', 'message-button', messageButtonHandler);
-            createButton('Unmatch', 'unmatch-button', unmatchButtonHandler);
+            //createButton('Unmatch', 'unmatch-button', unmatchButtonHandler);
         } else {
             createButton('Edit info', 'edit-info-button', editInfoButtonHandler);
             createButton('Logout', 'logout-button', logoutButtonHandler);
@@ -173,12 +173,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     function messageButtonHandler() {
-        console.log('Message button clicked');
-        window.location.href = '/api/matches';
-    }
-
-    function unmatchButtonHandler() {
-        console.log('Unmatch button clicked');
-        window.location.href = '/api/matches';
+        sessionStorage.setItem('receiverId', matchId);
+        window.location.href = '/api/chat';
     }
 });

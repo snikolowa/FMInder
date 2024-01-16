@@ -19,11 +19,11 @@
         <h1>FMInder</h1>
         <div class="edit-container">
             <h2>Edit Profile Info</h2>
-            <form class="edit-info-form" id="edit-info-form">
+            <form class="edit-info-form" id="edit-info-form" enctype="multipart/form-data">
                 <input type="file" name="profile-picture" placeholder="Upload Profile Picture" accept=".jpg,.jpeg">
                 <input type="email" name="email" placeholder="Email">
-                <input type="password" name="password" placeholder="Password">
-                <input type="password" name="repeat-password" placeholder="Repeat Password">
+                <input type="password" name="password" placeholder="Password" required>
+                <input type="password" name="repeat-password" placeholder="Repeat Password" required>
                 <input type="text" name="first-name" placeholder="First Name">
                 <input type="text" name="last-name" placeholder="Last Name">
                 <select name="gender">
