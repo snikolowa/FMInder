@@ -32,6 +32,10 @@ public class ViewController {
     public String showMatchesPage(){
         return "matches";
     }
+    @GetMapping("/messages")
+    public String showMessagesPage(){
+        return "messages";
+    }
 
     @GetMapping("/profile/edit")
     public String showEditProfilePage(){
