@@ -1,5 +1,5 @@
 document.getElementById('discard-button').addEventListener('click', function () {
-    window.location.href = 'profile.html';
+    window.location.href = '/api/profile';
 });
 
 document.addEventListener('DOMContentLoaded', async function () {
@@ -7,20 +7,22 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     if (discardButton) {
         discardButton.addEventListener('click', function () {
-            window.location.href = 'profile.html';
+            window.location.href = '/api/profile';
         });
     }
     
-    const userId = 1; // Replace with the actual user ID
+    const userId = sessionStorage.getItem('userId');
     const userData = await getUserData(userId);
+    console.log(userData);
+    let editInfoForm = document.getElementById('edit-info-form');
 
-    document.getElementById('edit-info-form').elements['email'].value = userData.email;
-    document.getElementById('edit-info-form').elements['first-name'].value = userData.firstName;
-    document.getElementById('edit-info-form').elements['last-name'].value = userData.lastName;
-    document.getElementById('edit-info-form').elements['gender'].value = userData.gender;
-    document.getElementById('edit-info-form').elements['class-year'].value = userData.classYear;
-    document.getElementById('edit-info-form').elements['major'].value = userData.major;
-    document.getElementById('edit-info-form').elements['interests'].value = userData.interests;
+    editInfoForm.elements['email'].value = userData.email;
+    editInfoForm.elements['first-name'].value = userData.firstName;
+    editInfoForm.elements['last-name'].value = userData.lastName;
+    editInfoForm.elements['gender'].value = userData.gender;
+    editInfoForm.elements['class-year'].value = userData.graduateYear;
+    editInfoForm.elements['major'].value = userData.major.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+    editInfoForm.elements['interests'].value = userData.interests;
 
     editInfoForm.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -43,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 async function getUserData(userId) {
     try {
-        const response = await fetch(`/users/profile/${userId}`);
+        const response = await fetch(`/users/profile`);
 
         if (!response.ok) {
             throw new Error('Failed to fetch user data');
@@ -58,8 +60,7 @@ async function getUserData(userId) {
 
 async function saveChanges(updatedUserData) {
     try {
-        const userId = 1; // Replace with the actual user ID
-        const response = await fetch(`/users/profile/${userId}`, {
+        const response = await fetch(`/users/profile`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

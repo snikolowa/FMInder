@@ -5,22 +5,28 @@ document.addEventListener('DOMContentLoaded', async function () {
     const sendRequestButtons = document.querySelectorAll('.send-request-button');
     const matchRequestsList = document.querySelector('.requests-list');
     const potentialMatchesList = document.querySelector('.potential-matches-list');
+    let isRequest = false;
 
     try {
         const matchRequestsResponse = await fetch(`/users/${userId}/requests`);
         const matchRequestsData = await matchRequestsResponse.json();
 
-        updateMatchesList(matchRequestsData, matchRequestsList, 'Connect');
+        updateMatchesList(matchRequestsData, matchRequestsList, 'Accept', 'Decline');
+
+        attachButtonListeners(acceptButtons, 'Accepted');
+        attachButtonListeners(declineButtons, 'Denied');
 
     } catch (error) {
         console.error('Error fetching match requests:', error);
     }
 
     try {
-        const potentialMatchesResponse = await fetch(`/users/${userId}/potential-matches`);
+        const potentialMatchesResponse = await fetch(`/matches`);
         const potentialMatchesData = await potentialMatchesResponse.json();
 
-        updateMatchesList(potentialMatchesData, potentialMatchesList, 'Accept', 'Decline');
+        updateMatchesList(potentialMatchesData, potentialMatchesList, 'Connect');
+
+        attachButtonListeners(sendRequestButtons, 'Connect', true);
 
     } catch (error) {
         console.error('Error fetching potential matches:', error);
@@ -34,13 +40,15 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 
-    attachButtonListeners(acceptButtons, 'Accepted');
-    attachButtonListeners(declineButtons, 'Denied');
-    attachButtonListeners(sendRequestButtons, 'Connect', true);
+    console.log('Accept buttons:', acceptButtons.length);
+    console.log('Decline buttons:', declineButtons.length);
+    console.log('Send request buttons:', sendRequestButtons.length);
 
-    function attachButtonListeners(buttons, status, isRequest = false) {
+    function attachButtonListeners(buttons, status, isRequest) {
         buttons.forEach(button => {
+            console.log('Adding event listener to button:', button);
             button.addEventListener('click', async function () {
+                console.log('Button clicked:', button, status, isRequest);
                 const id = getIdFromButton(button, isRequest);
 
                 await updateRequestStatus(id, status, isRequest);
@@ -67,6 +75,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         matchesData.forEach(match => {
+            console.log(match);
             const listItem = document.createElement('li');
 
             const profileInfoContainer = document.createElement('div');
@@ -77,8 +86,17 @@ document.addEventListener('DOMContentLoaded', async function () {
             profilePicture.alt = 'Profile Picture';
 
             const usernameAnchor = document.createElement('a');
-            usernameAnchor.href = `/api/profile/${match.userId}`;
-            usernameAnchor.textContent = match.username;
+            usernameAnchor.href = `/api/profile`;
+            usernameAnchor.textContent = match.firstName + ' ' + match.lastName;
+
+            usernameAnchor.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                sessionStorage.setItem('matchId', match.id);
+
+                window.location.href = this.href;
+            });
+
 
             profileInfoContainer.appendChild(profilePicture);
             profileInfoContainer.appendChild(usernameAnchor);
@@ -87,7 +105,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             actionButtonsContainer.classList.add('action-buttons');
 
             const primaryButton = document.createElement('button');
-            primaryButton.classList.add(isRequest ? 'send-request-button' : 'accept-button');
+            primaryButton.classList.add(isRequest ? 'accept-button' : 'send-request-button');
             primaryButton.textContent = primaryButtonLabel;
 
             if (secondaryButtonLabel) {
@@ -116,11 +134,11 @@ document.addEventListener('DOMContentLoaded', async function () {
                 },
                 body: isRequest ? JSON.stringify({ receiverUserId: id }) : undefined,
             });
+            console.log('API Response:', response);
 
             if (!response.ok) {
                 throw new Error('Failed to update request status');
             }
-
         } catch (error) {
             console.error('Error:', error);
         }

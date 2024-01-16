@@ -1,17 +1,26 @@
 document.addEventListener('DOMContentLoaded', async function () {
     const userId = sessionStorage.getItem('userId');
+    const matchId = sessionStorage.getItem('matchId');
+    console.log(matchId);
+    const isCurrentUserProfile = matchId !== null;
+    console.log(isCurrentUserProfile);
     const profileContainer = document.getElementById('container');
     const profileInfo = document.getElementById('user-info');
     const buttonContainer = document.querySelector('.profile-user-actions');
 
-    const pathSegments = window.location.pathname.split('/');
-    const profileUserId = pathSegments[pathSegments.indexOf('users') + 1];
+    window.addEventListener('beforeunload', function () {
+        const targetUrl = new URL(event.target.location.href);
+        const currentUrl = new URL(window.location.href);
+
+        if (targetUrl.pathname !== currentUrl.pathname) {
+            sessionStorage.removeItem('matchId');
+        }
+    });
 
     try {
-        const userData = await fetchUserData(userId);
-        updateProfileInfo(userData);
+        const userData = await fetchUserData(isCurrentUserProfile);
 
-        const isCurrentUserProfile = (userId === profileUserId);
+        updateProfileInfo(userData);
 
         if (isCurrentUserProfile) {
             createButton('Message', 'message-button', messageButtonHandler);
@@ -21,7 +30,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             createButton('Logout', 'logout-button');
 
             try {
-                const matchRequestsData = await fetchMatchData(userId);
+                const matchRequestsData = !isCurrentUserProfile ? await fetchMatchData(userId) : await fetchMatchData(matchId);
+
                 createMatchContainer(matchRequestsData);
             } catch (error) {
                 console.error('Error fetching matches:', error);
@@ -65,12 +75,20 @@ document.addEventListener('DOMContentLoaded', async function () {
             profileInfoContainer.classList.add('profile-info');
 
             const profilePicture = document.createElement('img');
-            profilePicture.src = match.profilePicture || '../assets/placeholder.png';
+            profilePicture.src = match.profilePicture === null ? '../assets/placeholder.png' : match.profilePicture;
             profilePicture.alt = 'Profile Picture';
 
             const usernameAnchor = document.createElement('a');
-            usernameAnchor.href = `/api/profile/${match.userId}`;
-            usernameAnchor.textContent = match.username;
+            usernameAnchor.href = `/api/profile`;
+            usernameAnchor.textContent = match.firstName + ' ' + match.lastName;
+
+            usernameAnchor.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                sessionStorage.setItem('matchId', match.id);
+
+                window.location.href = this.href;
+            });
 
             profileInfoContainer.appendChild(profilePicture);
             profileInfoContainer.appendChild(usernameAnchor);
@@ -80,13 +98,13 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
 
-    async function fetchUserData(userId) {
-        const response = await fetch(`/users/${userId}`);
+    async function fetchUserData(isCurrentUserProfile) {
+        const response = await fetch(`/users/${isCurrentUserProfile ? userId : matchId}`);
         return await response.json();
     }
 
-    async function fetchMatchData(userId) {
-        const response = await fetch(`/users/${userId}/matches`);
+    async function fetchMatchData(id) {
+        const response = await fetch(`/matches`);
         return await response.json();
     }
 
@@ -108,7 +126,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         classElement.textContent = `Class of ${user.graduateYear}`;
 
         const majorElement = document.createElement('p');
-        majorElement.textContent = `Major in ${user.major}`;
+        majorElement.textContent = `Major in ${user.major.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}`;
 
         const interestsElement = document.createElement('p');
         interestsElement.textContent = user.interests ? `Interests: ${user.interests}` : 'No current interests';
@@ -125,12 +143,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         const button = document.createElement('button');
         button.classList.add(className);
         button.textContent = label;
-        button.addEventListener('click', window[clickHandler]); // Attach the click handler
         buttonContainer.appendChild(button);
+        button.addEventListener('click', window[clickHandler]); // Attach the click handler
     }
 
     function editInfoButtonHandler() {
-        window.location.href = '/api/editProfile';
+        window.location.href = '/api/profile/edit';
     }
 
     function messageButtonHandler() {

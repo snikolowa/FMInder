@@ -4,19 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile</title>
+    <title>Profile</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/reset.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 </head>
-
 <body>
+    <nav class="navigation">
+        <ul>
+            <li><a href="/api/matches">Matches</a></li>
+            <li><a href="/api/messages">Messages</a></li>
+            <li><a href="/api/profile">Profile</a></li>
+        </ul>
+    </nav>
     <div class="container" id="container">
         <h1>FMInder</h1>
-<!--        <div class="match-container">-->
-<!--            <h2>My Matches</h2>-->
-<!--            <ul class="matches-list">-->
-<!--            </ul>-->
-<!--        </div>-->
         <div class="profile-section">
             <h2>Profile Information</h2>
             <div class="profile-user-info">
