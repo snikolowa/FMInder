@@ -8,33 +8,41 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 </head>
 <body>
+    <nav class="navigation">
+        <ul>
+            <li><a href="/api/matches">Matches</a></li>
+            <li><a href="/api/messages">Messages</a></li>
+            <li><a href="/api/profile">Profile</a></li>
+        </ul>
+    </nav>
     <div class="container">
         <h1>FMInder</h1>
         <div class="edit-container">
             <h2>Edit Profile Info</h2>
-            <form class="edit-info-form" id="edit-info-form">
+            <form class="edit-info-form" id="edit-info-form" enctype="multipart/form-data">
+                <input type="file" name="profile-picture" placeholder="Upload Profile Picture" accept=".jpg,.jpeg">
                 <input type="email" name="email" placeholder="Email">
-                <input type="password" name="password" placeholder="Password">
-                <input type="password" name="repeat-password" placeholder="Repeat Password">
+                <input type="password" name="password" placeholder="Password" required>
+                <input type="password" name="repeat-password" placeholder="Repeat Password" required>
                 <input type="text" name="first-name" placeholder="First Name">
                 <input type="text" name="last-name" placeholder="Last Name">
                 <select name="gender">
                     <option value="" disabled selected>Gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
                 </select>
-                <input type="text" name="class-year" placeholder="Class of (year)" pattern="[0-9]{4}" title="Enter a year between 2000 and 2028">
-                <select name="major">
+                <input type="number" name="class-year" placeholder="Class of (year)" pattern="[0-9]{4}" title="Enter a year between 2000 and 2028">
+                <select name="major" required>
                     <option value="" disabled selected>Major in</option>
-                    <option value="Data Analysis">Data Analysis</option>
-                    <option value="Mathematics">Mathematics</option>
-                    <option value="Applied Mathematics">Applied Mathematics</option>
-                    <option value="Statistics">Statistics</option>
-                    <option value="Informatics">Informatics</option>
-                    <option value="Information Systems">Information Systems</option>
-                    <option value="Computer Science">Computer Science</option>
-                    <option value="Software Engineering">Software Engineering</option>
+                    <option value="DATA_ANALYSIS">Data Analysis</option>
+                    <option value="MATHEMATICS">Mathematics</option>
+                    <option value="APPLIED_MATHEMATICS">Applied Mathematics</option>
+                    <option value="STATISTICS">Statistics</option>
+                    <option value="INFORMATICS">Informatics</option>
+                    <option value="INFORMATION_SYSTEMS">Information Systems</option>
+                    <option value="COMPUTER_SCIENCE">Computer Science</option>
+                    <option value="SOFTWARE_ENGINEERING">Software Engineering</option>
                 </select>
                 <input type="text" name="interests" placeholder="Interests">
                 <div class="form-controls">

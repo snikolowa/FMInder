@@ -33,6 +33,16 @@ public class ViewController {
         return "matches";
     }
 
+    @GetMapping("/messages")
+    public String showMessagesPage(){
+        return "messages";
+    }
+
+    @GetMapping("/chat")
+    public String showChatPage(){
+        return "chat";
+    }
+
     @GetMapping("/profile/edit")
     public String showEditProfilePage(){
         return "editProfile";

@@ -1,29 +1,48 @@
 document.addEventListener('DOMContentLoaded', async function () {
-    const userId= sessionStorage.getItem('userId');
-    const acceptButtons = document.querySelectorAll('.accept-button');
-    const declineButtons = document.querySelectorAll('.decline-button');
-    const sendRequestButtons = document.querySelectorAll('.send-request-button');
+    const userId = sessionStorage.getItem('userId');
     const matchRequestsList = document.querySelector('.requests-list');
     const potentialMatchesList = document.querySelector('.potential-matches-list');
+    let isRequest = true;
 
     try {
-        const matchRequestsResponse = await fetch(`/users/${userId}/requests`);
-        const matchRequestsData = await matchRequestsResponse.json();
-
-        updateMatchesList(matchRequestsData, matchRequestsList, 'Connect');
-
+        const matchRequestsData = await fetchMatchRequests(userId);
+        updateMatchesList(matchRequestsData, matchRequestsList, 'Accept', 'Decline', isRequest = false);
     } catch (error) {
         console.error('Error fetching match requests:', error);
     }
 
     try {
-        const potentialMatchesResponse = await fetch(`/users/${userId}/potential-matches`);
-        const potentialMatchesData = await potentialMatchesResponse.json();
-
-        updateMatchesList(potentialMatchesData, potentialMatchesList, 'Accept', 'Decline');
-
+        const potentialMatchesData = await fetchPotentialMatches();
+        console.log(potentialMatchesData);
+        updateMatchesList(potentialMatchesData, potentialMatchesList, 'Connect', '', isRequest = true);
     } catch (error) {
         console.error('Error fetching potential matches:', error);
+    }
+
+    async function fetchMatchRequests(userId) {
+        try {
+            const matchRequestsResponse = await fetch(`/users/${userId}/requests`);
+            const matchRequests = await matchRequestsResponse.json();
+            console.log('Match Requests: ', matchRequests);
+
+            return matchRequests.map(entry => {
+                return {
+                    ...entry.user,
+                    requestId: entry.request.id
+                };
+            });
+        } catch (error) {
+            throw new Error('Error fetching match requests:', error);
+        }
+    }
+
+    async function fetchPotentialMatches() {
+        try {
+            const potentialMatchesResponse = await fetch(`/matches`);
+            return await potentialMatchesResponse.json();
+        } catch (error) {
+            throw new Error('Error fetching potential matches:', error);
+        }
     }
 
     function removeItemFromList(listElement, id) {
@@ -34,29 +53,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 
-    attachButtonListeners(acceptButtons, 'Accepted');
-    attachButtonListeners(declineButtons, 'Denied');
-    attachButtonListeners(sendRequestButtons, 'Connect', true);
-
-    function attachButtonListeners(buttons, status, isRequest = false) {
-        buttons.forEach(button => {
-            button.addEventListener('click', async function () {
-                const id = getIdFromButton(button, isRequest);
-
-                await updateRequestStatus(id, status, isRequest);
-
-                removeItemFromList(isRequest ? potentialMatchesList : matchRequestsList, id);
-            });
-        });
-    }
-
     function getIdFromButton(button, isRequest) {
         const listItem = button.closest('li');
-
-        return listItem.dataset[isRequest ? 'requestId' : 'userId'];
+        return isRequest ? listItem.dataset.requestId : listItem.dataset.userId;
     }
 
-    function updateMatchesList(matchesData, listElement, primaryButtonLabel, secondaryButtonLabel) {
+    function updateMatchesList(matchesData, listElement, primaryButtonLabel, secondaryButtonLabel, isRequest) {
         listElement.innerHTML = '';
 
         if (!Array.isArray(matchesData) || matchesData.length === 0) {
@@ -67,7 +69,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         matchesData.forEach(match => {
+            console.log('Match: ', match);
             const listItem = document.createElement('li');
+            listItem.dataset.requestId = match.requestId;
 
             const profileInfoContainer = document.createElement('div');
             profileInfoContainer.classList.add('profile-info');
@@ -77,8 +81,16 @@ document.addEventListener('DOMContentLoaded', async function () {
             profilePicture.alt = 'Profile Picture';
 
             const usernameAnchor = document.createElement('a');
-            usernameAnchor.href = `/api/profile/${match.userId}`;
-            usernameAnchor.textContent = match.username;
+            usernameAnchor.href = `/api/profile`;
+            usernameAnchor.textContent = match.firstName + ' ' + match.lastName;
+
+            usernameAnchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                sessionStorage.setItem('matchId', match.id);
+
+                window.location.href = this.href;
+            });
 
             profileInfoContainer.appendChild(profilePicture);
             profileInfoContainer.appendChild(usernameAnchor);
@@ -89,6 +101,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             const primaryButton = document.createElement('button');
             primaryButton.classList.add(isRequest ? 'send-request-button' : 'accept-button');
             primaryButton.textContent = primaryButtonLabel;
+            actionButtonsContainer.appendChild(primaryButton);
 
             if (secondaryButtonLabel) {
                 const secondaryButton = document.createElement('button');
@@ -97,29 +110,59 @@ document.addEventListener('DOMContentLoaded', async function () {
                 actionButtonsContainer.appendChild(secondaryButton);
             }
 
-            actionButtonsContainer.appendChild(primaryButton);
-
             listItem.appendChild(profileInfoContainer);
             listItem.appendChild(actionButtonsContainer);
 
             listElement.appendChild(listItem);
+
+            actionButtonsContainer.addEventListener('click', async function (event) {
+                const id = getIdFromButton(event.target, isRequest);
+
+                if (event.target.classList.contains('accept-button')) {
+                    await updateRequestStatus(listItem.dataset.requestId, primaryButtonLabel, isRequest = false);
+                } else if (event.target.classList.contains('decline-button')) {
+                    await updateRequestStatus(listItem.dataset.requestId, secondaryButtonLabel, isRequest = false);
+                } else if (event.target.classList.contains('send-request-button')) {
+                    await updateRequestStatus(match.id, 'Connect', isRequest = true);
+                }
+
+                removeItemFromList(isRequest ? potentialMatchesList : matchRequestsList, id);
+            });
         });
     }
 
     async function updateRequestStatus(id, status, isRequest) {
         try {
-            const endpoint = isRequest ? '/requests' : `/requests/${id}/${status}`;
+            let endpoint;
+            if (isRequest) {
+                endpoint = '/requests';
+            } else {
+                endpoint = status === 'Accept' ? `/requests/${id}/Accepted` : `/requests/${id}/Denied`;
+            }
+
             const response = await fetch(endpoint, {
-                method: isRequest ? 'POST' : 'PATCH',
+                method: !isRequest ? 'PATCH' : 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: isRequest ? JSON.stringify({ receiverUserId: id }) : undefined,
+                body: !isRequest ? JSON.stringify({requestId: id,}) : JSON.stringify({receiverUserId: id,}),
             });
+
+            console.log('API Response:', response);
 
             if (!response.ok) {
                 throw new Error('Failed to update request status');
             }
+
+            if (isRequest) {
+                const potentialMatchesData = await fetchPotentialMatches();
+                updateMatchesList(potentialMatchesData, potentialMatchesList, 'Connect', '', isRequest = true);
+            } else {
+                const matchRequestsData = await fetchMatchRequests(userId);
+                updateMatchesList(matchRequestsData, matchRequestsList, 'Accept', 'Decline', isRequest = false);
+            }
+
+            removeItemFromList(isRequest ? potentialMatchesList : matchRequestsList, id);
 
         } catch (error) {
             console.error('Error:', error);

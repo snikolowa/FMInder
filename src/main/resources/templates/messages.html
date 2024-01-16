@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
+    <title>Messages</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/reset.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 </head>
@@ -18,17 +16,12 @@
     </nav>
     <div class="container" id="container">
         <h1>FMInder</h1>
-        <div class="profile-section">
-            <h2>Profile Information</h2>
-            <div class="profile-user-info">
-                <div class="user-info" id="user-info">
-                </div>
-            </div>
-            <div class="profile-user-actions">
-            </div>
+        <div class="messages-container">
+            <h2>Messages</h2>
+            <ul class="messages" id="messagesList">
+            </ul>
         </div>
     </div>
-    <script th:src="@{/js/profile.js}"></script>
-    <script th:src="@{/js/logout.js}"></script>
 </body>
+<script th:src="@{/js/messages.js}"></script>
 </html>

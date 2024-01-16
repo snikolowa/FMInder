@@ -7,7 +7,7 @@ document.getElementById('registrationForm').addEventListener('submit', async fun
     const firstName = document.getElementsByName('first-name')[0].value;
     const lastName = document.getElementsByName('last-name')[0].value;
     const gender = document.getElementsByName('gender')[0].value;
-    const classYear = document.getElementsByName('class-year')[0].value;
+    const classYear = +document.getElementsByName('class-year')[0].value;
     const major = document.getElementsByName('major')[0].value;
 
     if (password !== repeatPassword) {
