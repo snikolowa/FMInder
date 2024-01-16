@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async function () {
     const messagesList = document.getElementById('messagesList');
-    const receiverId = sessionStorage.getItem('userId');
+    const userId = sessionStorage.getItem('userId');
 
     try {
         const response = await fetch(`/chat`);
@@ -26,11 +26,11 @@ document.addEventListener('DOMContentLoaded', async function () {
 
                 sessionStorage.setItem('receiverId', message.senderId);
 
-                window.location.href = '/chat';
+                window.location.href = '/api/chat';
             });
 
             const sender = document.createElement('span');
-            sender.textContent =  senderName
+            sender.textContent =  senderName;
 
             const messageText = document.createElement('span');
             messageText.textContent = messageContent;
