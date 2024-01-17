@@ -17,17 +17,22 @@ document.addEventListener('DOMContentLoaded', async function () {
         const chatData = await response.json();
 
         for (const message of chatData) {
-            if (message.senderId === userId) {
-                continue;
-            }
+            // if (message.receiverId === userId) {
+            //     continue;
+            // }
 
             const userResponse = await fetch(`/users/${message.senderId}`);
             const userData = await userResponse.json();
+            const receiverResponse = await fetch(`/users/${message.receiverId}`);
+            const receiverData = await receiverResponse.json();
 
             const listItem = document.createElement('li');
             listItem.classList.add('message');
 
-            const senderName = userData.firstName + ' ' + userData.lastName;
+            const senderName = (message.senderId === +userId)
+                ? receiverData.firstName + ' ' + receiverData.lastName
+                : userData.firstName + ' ' + userData.lastName;
+
             const messageContent = message.message;
 
             const chatAnchor = document.createElement('a');
@@ -36,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             chatAnchor.addEventListener('click', function(event) {
                 event.preventDefault();
 
-                sessionStorage.setItem('receiverId', message.senderId);
+                sessionStorage.setItem('receiverId', message.senderId === +userId ? message.receiverId : message.senderId);
 
                 window.location.href = '/api/chat';
             });

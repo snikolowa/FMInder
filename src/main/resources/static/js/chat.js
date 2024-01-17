@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", async function () {
+    const userId = sessionStorage.getItem("userId");
     const receiverId = sessionStorage.getItem("receiverId");
 
     const profileLink = document.getElementById('nav-profile');
@@ -12,11 +13,25 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     await fetchChat();
+
     async function fetchChat() {
         try {
             const response = await fetch(`/chat/${receiverId}`);
             const messages = await response.json();
-            await displayMessages(messages);
+
+            console.log(messages);
+
+            const otherUserId =  userId === receiverId ? messages[0].senderId : receiverId;
+            const otherUserResponse = await fetch(`/users/${otherUserId}`);
+            const otherUserData = await otherUserResponse.json();
+
+            const chatHeader = document.querySelector(".chat-container h2");
+
+            if (chatHeader) {
+                chatHeader.textContent = `Chat with ${otherUserData.firstName} ${otherUserData.lastName}`;
+            }
+
+            displayMessages(messages);
         } catch (error) {
             console.error("Error fetching chat:", error);
         }
@@ -78,7 +93,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                 messageInput.value = "";
 
-                await fetchChat();
+                fetchChat();
             } catch (error) {
                 console.error("Error sending message:", error);
             }
