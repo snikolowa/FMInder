@@ -1,0 +1,8 @@
+{
+  "name": "fminder-deploy",
+  "buildpacks" : [
+    {
+      "url": "heroku/gradle"
+    }
+  ]
+}
