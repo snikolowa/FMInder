@@ -15,7 +15,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAllByIdIsNot(int userId);
 
-    @Query("SELECT DISTINCT r.senderId FROM Request r WHERE (r.receiverId = :receiverUserId OR r.senderId = :receiverUserId) AND r.status = 'Accepted'")
+    @Query("SELECT DISTINCT \n" +
+            "    CASE \n" +
+            "        WHEN r.receiverId = :receiverUserId THEN r.senderId\n" +
+            "        WHEN r.senderId = :receiverUserId THEN r.receiverId\n" +
+            "    END AS userId\n" +
+            "FROM \n" +
+            "    Request r\n" +
+            "WHERE \n" +
+            "    (r.receiverId = :receiverUserId OR r.senderId = :receiverUserId) \n" +
+            "    AND r.status = 'Accepted'")
     List<Long> findSenderIdsByReceiverUserId(int receiverUserId);
 
 }
