@@ -1,6 +1,16 @@
 document.addEventListener('DOMContentLoaded', async function () {
     const discardButton = document.getElementById('discard-button');
 
+    const profileLink = document.getElementById('nav-profile');
+
+    if (profileLink) {
+        profileLink.addEventListener('click', function() {
+            if (sessionStorage.getItem('matchId')) {
+                sessionStorage.removeItem('matchId');
+            }
+        });
+    }
+
     if (discardButton) {
         discardButton.addEventListener('click', function () {
             window.location.href = '/api/profile';

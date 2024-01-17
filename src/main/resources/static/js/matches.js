@@ -4,6 +4,16 @@ document.addEventListener('DOMContentLoaded', async function () {
     const potentialMatchesList = document.querySelector('.potential-matches-list');
     let isRequest = true;
 
+    const profileLink = document.getElementById('nav-profile');
+
+    if (profileLink) {
+        profileLink.addEventListener('click', function() {
+            if (sessionStorage.getItem('matchId')) {
+                sessionStorage.removeItem('matchId');
+            }
+        });
+    }
+
     try {
         const matchRequestsData = await fetchMatchRequests(userId);
         updateMatchesList(matchRequestsData, matchRequestsList, 'Accept', 'Decline', isRequest = false);

@@ -2,6 +2,16 @@ document.addEventListener('DOMContentLoaded', async function () {
     const messagesList = document.getElementById('messagesList');
     const userId = sessionStorage.getItem('userId');
 
+    const profileLink = document.getElementById('nav-profile');
+
+    if (profileLink) {
+        profileLink.addEventListener('click', function() {
+            if (sessionStorage.getItem('matchId')) {
+                sessionStorage.removeItem('matchId');
+            }
+        });
+    }
+
     try {
         const response = await fetch(`/chat`);
         const chatData = await response.json();

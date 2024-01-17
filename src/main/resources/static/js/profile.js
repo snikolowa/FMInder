@@ -6,11 +6,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     const profileInfo = document.getElementById('user-info');
     const buttonContainer = document.querySelector('.profile-user-actions');
 
-    window.addEventListener('beforeunload', function (event) {
-        if (sessionStorage.getItem('matchId')) {
-            sessionStorage.removeItem('matchId');
-        }
-    });
+    const profileLink = document.getElementById('nav-profile');
+
+    if (profileLink) {
+        profileLink.addEventListener('click', function() {
+            if (sessionStorage.getItem('matchId')) {
+                sessionStorage.removeItem('matchId');
+            }
+        });
+    }
 
     try {
         const userData = await fetchUserData(isCurrentUserProfile);
@@ -24,12 +28,12 @@ document.addEventListener('DOMContentLoaded', async function () {
             createButton('Edit info', 'edit-info-button', editInfoButtonHandler);
             createButton('Logout', 'logout-button', logoutButtonHandler);
 
-            // try {
-            //     const matchRequestsData = isCurrentUserProfile ? await fetchMatchData(userId) : await fetchMatchData(matchId);
-            //     createMatchContainer(matchRequestsData);
-            // } catch (error) {
-            //     console.error('Error fetching matches:', error);
-            // }
+            try {
+                 const matchesData = await fetchMatchData(userId);
+                 createMatchContainer(matchesData);
+             } catch (error) {
+                 console.error('Error fetching matches:', error);
+            }
         }
     } catch (error) {
         console.error('Error fetching user profile:', error);
@@ -63,31 +67,33 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         matchesData.forEach(match => {
-            const listItem = document.createElement('li');
-            const profileInfoContainer = document.createElement('div');
-            profileInfoContainer.classList.add('profile-info');
+            if(match.id !== +userId) {
+                const listItem = document.createElement('li');
+                const profileInfoContainer = document.createElement('div');
+                profileInfoContainer.classList.add('profile-info');
 
-            const profilePicture = document.createElement('img');
-            profilePicture.src = match.profilePicture === null ? '../assets/placeholder.png' : match.profilePicture;
-            profilePicture.alt = 'Profile Picture';
+                const profilePicture = document.createElement('img');
+                profilePicture.src = match.profilePicture === null ? '../assets/placeholder.png' : match.profilePicture;
+                profilePicture.alt = 'Profile Picture';
 
-            const usernameAnchor = document.createElement('a');
-            usernameAnchor.href = `/api/profile`;
-            usernameAnchor.textContent = match.firstName + ' ' + match.lastName;
+                const usernameAnchor = document.createElement('a');
+                usernameAnchor.href = `/api/profile`;
+                usernameAnchor.textContent = match.firstName + ' ' + match.lastName;
 
-            usernameAnchor.addEventListener('click', function(e) {
-                e.preventDefault();
+                usernameAnchor.addEventListener('click', function(e) {
+                    e.preventDefault();
 
-                sessionStorage.setItem('matchId', match.id);
+                    sessionStorage.setItem('matchId', match.id);
 
-                window.location.href = this.href;
-            });
+                    window.location.href = '/api/profile';
+                });
 
-            profileInfoContainer.appendChild(profilePicture);
-            profileInfoContainer.appendChild(usernameAnchor);
+                profileInfoContainer.appendChild(profilePicture);
+                profileInfoContainer.appendChild(usernameAnchor);
 
-            listItem.appendChild(profileInfoContainer);
-            listElement.appendChild(listItem);
+                listItem.appendChild(profileInfoContainer);
+                listElement.appendChild(listItem);
+            }
         });
     }
 
@@ -97,12 +103,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     async function fetchMatchData(id) {
-        const response = await fetch(`/users/profile`);
+        const response = await fetch(`/matched`);
         return await response.json();
     }
 
     function updateProfileInfo(user) {
-        profileInfo.innerHTML = ''; // Clear existing content
+        profileInfo.innerHTML = '';
 
         const profilePicture = document.createElement('img');
         profilePicture.src = user.profilePicture || '../assets/placeholder.png';

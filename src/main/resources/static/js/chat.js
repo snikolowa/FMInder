@@ -1,8 +1,17 @@
 document.addEventListener("DOMContentLoaded", async function () {
     const receiverId = sessionStorage.getItem("receiverId");
 
-    await fetchChat();
+    const profileLink = document.getElementById('nav-profile');
 
+    if (profileLink) {
+        profileLink.addEventListener('click', function() {
+            if (sessionStorage.getItem('matchId')) {
+                sessionStorage.removeItem('matchId');
+            }
+        });
+    }
+
+    await fetchChat();
     async function fetchChat() {
         try {
             const response = await fetch(`/chat/${receiverId}`);
