@@ -25,7 +25,7 @@ public class UserController extends BaseController {
     }
 
     @PutMapping("/users/profile")
-    public ResponseEntity<User> updateUserProfile(@Valid @RequestBody User user, HttpServletRequest request) {
+    public ResponseEntity<User> updateUserProfile(@RequestBody User user, HttpServletRequest request) {
         int userId = authenticationHelper.getLoggedUserId(request);
         return new ResponseEntity<>(userService.updateUser(userId, user), HttpStatus.OK);
     }
