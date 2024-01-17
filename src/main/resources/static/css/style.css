@@ -90,6 +90,16 @@ h2 {
     text-align: center;
 }
 
+.register-anchor,
+.login-anchor {
+    margin-top: 40px;
+}
+
+.register-anchor span,
+.login-anchor span {
+    margin-right: 12px;
+}
+
 .match-container {
     width: 400px;
     margin-bottom: 50px;

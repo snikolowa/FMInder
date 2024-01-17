@@ -10,9 +10,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     const userId = sessionStorage.getItem('userId');
     const userData = await getUserData(userId);
     let editInfoForm = document.getElementById('edit-info-form');
-    let imagePreview = document.getElementById('output');
     console.log(userData);
-    editInfoForm.elements['file'].value = userData.profilePicture || '';
+    let imagePreview = document.getElementById('output');
+    imagePreview.src = userData.profilePicture || '../assets/placeholder.png';
+
+    editInfoForm.elements['file'].value = '';
     editInfoForm.elements['email'].value = userData.email;
     editInfoForm.elements['first-name'].value = userData.firstName;
     editInfoForm.elements['last-name'].value = userData.lastName;
