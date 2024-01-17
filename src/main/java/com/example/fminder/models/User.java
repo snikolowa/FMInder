@@ -55,14 +55,4 @@ public class User {
 
     @Column(name = "profile_picture")
     String profilePicture;
-
-    public User(String firstName, String lastName, Gender gender, String email, String password, int graduateYear, Major major) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.gender = gender;
-        this.email = email;
-        this.password = password;
-        this.graduateYear = graduateYear;
-        this.major = major;
-    }
 }
