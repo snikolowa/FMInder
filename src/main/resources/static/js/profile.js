@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', async function () {
     const userId = sessionStorage.getItem('userId');
     const matchId = sessionStorage.getItem('matchId');
-    console.log(matchId);
     const isCurrentUserProfile = matchId === undefined || matchId === null;
-    console.log(isCurrentUserProfile);
     const profileContainer = document.getElementById('container');
     const profileInfo = document.getElementById('user-info');
     const buttonContainer = document.querySelector('.profile-user-actions');
@@ -28,7 +26,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             // try {
             //     const matchRequestsData = isCurrentUserProfile ? await fetchMatchData(userId) : await fetchMatchData(matchId);
-            //     console.log(matchRequestsData);
             //     createMatchContainer(matchRequestsData);
             // } catch (error) {
             //     console.error('Error fetching matches:', error);
@@ -66,7 +63,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         matchesData.forEach(match => {
-            console.log(match);
             const listItem = document.createElement('li');
             const profileInfoContainer = document.createElement('div');
             profileInfoContainer.classList.add('profile-info');
@@ -106,7 +102,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     function updateProfileInfo(user) {
-        console.log(user);
         profileInfo.innerHTML = ''; // Clear existing content
 
         const profilePicture = document.createElement('img');
@@ -146,12 +141,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     function editInfoButtonHandler() {
-        console.log('Edit Info button clicked');
         window.location.href = '/api/profile/edit';
     }
 
     function logoutButtonHandler() {
-        console.log('Logout button clicked');
         (async function () {
             try {
                 const response = await fetch('/logout', {

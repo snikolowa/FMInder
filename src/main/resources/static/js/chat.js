@@ -7,8 +7,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         try {
             const response = await fetch(`/chat/${receiverId}`);
             const messages = await response.json();
-            console.log(messages);
-            displayMessages(messages);
+            await displayMessages(messages);
         } catch (error) {
             console.error("Error fetching chat:", error);
         }
@@ -67,10 +66,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                 if (!response.ok) {
                     throw new Error('Failed to update request status');
                 }
-
-                const savedMessage = await response.json();
-
-                console.log("Message sent successfully:", savedMessage);
 
                 messageInput.value = "";
 

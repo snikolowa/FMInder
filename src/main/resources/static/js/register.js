@@ -39,6 +39,8 @@ document.getElementById('registrationForm').addEventListener('submit', async fun
             throw new Error(`Registration failed with status ${response.status}`);
         }
 
+        alert('Successful registration!')
+
         window.location.href = '/api/login';
     } catch (error) {
         console.error('Registration failed', error);

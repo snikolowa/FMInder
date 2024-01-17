@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const userId = sessionStorage.getItem('userId');
     const userData = await getUserData(userId);
-    console.log(userData);
     let editInfoForm = document.getElementById('edit-info-form');
+    let imagePreview = document.getElementById('output');
 
     editInfoForm.elements['profile-picture'].value = userData.profilePicture;
     editInfoForm.elements['email'].value = userData.email;
@@ -20,6 +20,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     editInfoForm.elements['class-year'].value = userData.graduateYear;
     editInfoForm.elements['major'].value = userData.major.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
     editInfoForm.elements['interests'].value = userData.interests;
+
+    editInfoForm.elements['profile-picture'].addEventListener('change', function (event) {
+        loadFile(event, imagePreview);
+    });
 
     editInfoForm.addEventListener('submit', async function (e) {
         e.preventDefault();
@@ -42,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             await uploadProfilePicture(profilePictureBlob);
         }
 
-        updateUserProfile(updatedUserData);
+        await updateUserProfile(updatedUserData);
     });
 
     async function getUserData(userId) {
@@ -74,7 +78,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 throw new Error('Failed to update user profile');
             }
 
-            console.log('User profile updated successfully');
+            alert('Profile information is updated successfully!')
         } catch (error) {
             console.error('Error:', error);
         }
@@ -90,13 +94,18 @@ document.addEventListener('DOMContentLoaded', async function () {
                 body: formData,
             });
 
+            console.log('Server response:', response);
+
             if (!response.ok) {
                 throw new Error('Failed to upload profile picture');
             }
 
-            console.log('Profile picture uploaded successfully');
+            alert('Profile picture is updated successfully!')
         } catch (error) {
             console.error('Error:', error);
         }
+    }
+    function loadFile(e, image) {
+        image.src = URL.createObjectURL(e.target.files[0]);
     }
 });
