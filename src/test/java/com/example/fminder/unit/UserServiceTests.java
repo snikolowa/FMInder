@@ -2,6 +2,7 @@ package com.example.fminder.unit;
 
 import com.example.fminder.exceptions.NotFoundException;
 import com.example.fminder.models.User;
+import com.example.fminder.repositories.RequestRepository;
 import com.example.fminder.repositories.UserRepository;
 import com.example.fminder.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +24,9 @@ class UserServiceTests {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private RequestRepository requestRepository;
 
     @InjectMocks
     private UserService userService;
