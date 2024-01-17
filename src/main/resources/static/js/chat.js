@@ -1,5 +1,16 @@
 document.addEventListener("DOMContentLoaded", async function () {
+    const userId = sessionStorage.getItem("userId");
     const receiverId = sessionStorage.getItem("receiverId");
+
+    const profileLink = document.getElementById('nav-profile');
+
+    if (profileLink) {
+        profileLink.addEventListener('click', function() {
+            if (sessionStorage.getItem('matchId')) {
+                sessionStorage.removeItem('matchId');
+            }
+        });
+    }
 
     await fetchChat();
 
@@ -7,7 +18,18 @@ document.addEventListener("DOMContentLoaded", async function () {
         try {
             const response = await fetch(`/chat/${receiverId}`);
             const messages = await response.json();
-            await displayMessages(messages);
+
+            const otherUserId =  userId === receiverId ? messages[0].senderId : receiverId;
+            const otherUserResponse = await fetch(`/users/${otherUserId}`);
+            const otherUserData = await otherUserResponse.json();
+
+            const chatHeader = document.querySelector(".chat-container h2");
+
+            if (chatHeader) {
+                chatHeader.textContent = `Chat with ${otherUserData.firstName} ${otherUserData.lastName}`;
+            }
+
+            displayMessages(messages);
         } catch (error) {
             console.error("Error fetching chat:", error);
         }
@@ -26,6 +48,10 @@ document.addEventListener("DOMContentLoaded", async function () {
                 const li = document.createElement("li");
                 li.classList.add('message');
 
+                const profilePicture = document.createElement('img');
+                profilePicture.src = userData.profilePicture ? `data:image/jpeg;base64,${userData.profilePicture}` : '../assets/placeholder.png';
+                profilePicture.alt = 'Profile Picture';
+
                 const sender = document.createElement('span');
                 sender.textContent =  userData.firstName + ' ' + userData.lastName;
 
@@ -35,6 +61,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 const messageTimestamp = document.createElement('span');
                 messageTimestamp.textContent = 'Sent at ' + formatTimestamp(message.timestamp);
 
+                li.appendChild(profilePicture);
                 li.appendChild(sender);
                 li.appendChild(messageText);
                 li.appendChild(messageTimestamp);
@@ -69,7 +96,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                 messageInput.value = "";
 
-                await fetchChat();
+                fetchChat();
             } catch (error) {
                 console.error("Error sending message:", error);
             }

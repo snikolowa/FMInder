@@ -4,6 +4,16 @@ document.addEventListener('DOMContentLoaded', async function () {
     const potentialMatchesList = document.querySelector('.potential-matches-list');
     let isRequest = true;
 
+    const profileLink = document.getElementById('nav-profile');
+
+    if (profileLink) {
+        profileLink.addEventListener('click', function() {
+            if (sessionStorage.getItem('matchId')) {
+                sessionStorage.removeItem('matchId');
+            }
+        });
+    }
+
     try {
         const matchRequestsData = await fetchMatchRequests(userId);
         updateMatchesList(matchRequestsData, matchRequestsList, 'Accept', 'Decline', isRequest = false);
@@ -74,7 +84,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             profileInfoContainer.classList.add('profile-info');
 
             const profilePicture = document.createElement('img');
-            profilePicture.src = match.profilePicture || '../assets/placeholder.png';
+            profilePicture.src = match.profilePicture ? `data:image/jpeg;base64,${match.profilePicture}` : '../assets/placeholder.png';
             profilePicture.alt = 'Profile Picture';
 
             const usernameAnchor = document.createElement('a');

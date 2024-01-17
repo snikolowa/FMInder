@@ -1,6 +1,16 @@
 document.addEventListener('DOMContentLoaded', async function () {
     const discardButton = document.getElementById('discard-button');
 
+    const profileLink = document.getElementById('nav-profile');
+
+    if (profileLink) {
+        profileLink.addEventListener('click', function() {
+            if (sessionStorage.getItem('matchId')) {
+                sessionStorage.removeItem('matchId');
+            }
+        });
+    }
+
     if (discardButton) {
         discardButton.addEventListener('click', function () {
             window.location.href = '/api/profile';
@@ -10,9 +20,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     const userId = sessionStorage.getItem('userId');
     const userData = await getUserData(userId);
     let editInfoForm = document.getElementById('edit-info-form');
-    console.log(userData);
+
     let imagePreview = document.getElementById('output');
-    imagePreview.src = userData.profilePicture || '../assets/placeholder.png';
+    imagePreview.src = userData.profilePicture ? `data:image/jpeg;base64,${userData.profilePicture}` : '../assets/placeholder.png';
 
     editInfoForm.elements['file'].value = '';
     editInfoForm.elements['email'].value = userData.email;
@@ -95,8 +105,6 @@ document.addEventListener('DOMContentLoaded', async function () {
                 method: 'POST',
                 body: formData,
             });
-
-            console.log('Server response:', response);
 
             if (!response.ok) {
                 throw new Error('Failed to upload profile picture');
