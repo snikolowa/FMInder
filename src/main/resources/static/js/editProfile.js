@@ -9,10 +9,12 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const userId = sessionStorage.getItem('userId');
     const userData = await getUserData(userId);
-    console.log(userData);
     let editInfoForm = document.getElementById('edit-info-form');
+    console.log(userData);
+    let imagePreview = document.getElementById('output');
+    imagePreview.src = userData.profilePicture || '../assets/placeholder.png';
 
-    editInfoForm.elements['profile-picture'].value = userData.profilePicture;
+    editInfoForm.elements['file'].value = '';
     editInfoForm.elements['email'].value = userData.email;
     editInfoForm.elements['first-name'].value = userData.firstName;
     editInfoForm.elements['last-name'].value = userData.lastName;
@@ -21,11 +23,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     editInfoForm.elements['major'].value = userData.major.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
     editInfoForm.elements['interests'].value = userData.interests;
 
+    editInfoForm.elements['file'].addEventListener('change', function (event) {
+        loadFile(event, imagePreview);
+    });
+
     editInfoForm.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         const updatedUserData = {
-            profilePicture: editInfoForm.elements['profile-picture'].value,
+            file: editInfoForm.elements['file'].value,
             email: editInfoForm.elements['email'].value,
             password: editInfoForm.elements['password'].value,
             repeatPassword: editInfoForm.elements['repeat-password'].value,
@@ -37,12 +43,12 @@ document.addEventListener('DOMContentLoaded', async function () {
             interests: editInfoForm.elements['interests'].value,
         };
 
-        if (editInfoForm.elements['profile-picture'].files.length > 0) {
-            const profilePictureBlob = editInfoForm.elements['profile-picture'].files[0];
+        if (editInfoForm.elements['file'].files.length > 0) {
+            const profilePictureBlob = editInfoForm.elements['file'].files[0];
             await uploadProfilePicture(profilePictureBlob);
         }
 
-        updateUserProfile(updatedUserData);
+        await updateUserProfile(updatedUserData);
     });
 
     async function getUserData(userId) {
@@ -74,7 +80,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 throw new Error('Failed to update user profile');
             }
 
-            console.log('User profile updated successfully');
+            alert('Profile information is updated successfully!')
         } catch (error) {
             console.error('Error:', error);
         }
@@ -83,20 +89,25 @@ document.addEventListener('DOMContentLoaded', async function () {
     async function uploadProfilePicture(blob) {
         try {
             const formData = new FormData();
-            formData.append('profilePicture', blob);
+            formData.append('file', blob);
 
             const response = await fetch('/users/profile/upload-picture', {
                 method: 'POST',
                 body: formData,
             });
 
+            console.log('Server response:', response);
+
             if (!response.ok) {
                 throw new Error('Failed to upload profile picture');
             }
 
-            console.log('Profile picture uploaded successfully');
+            alert('Profile picture is updated successfully!')
         } catch (error) {
             console.error('Error:', error);
         }
+    }
+    function loadFile(e, image) {
+        image.src = URL.createObjectURL(e.target.files[0]);
     }
 });

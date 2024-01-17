@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     try {
         const potentialMatchesData = await fetchPotentialMatches();
-        console.log(potentialMatchesData);
         updateMatchesList(potentialMatchesData, potentialMatchesList, 'Connect', '', isRequest = true);
     } catch (error) {
         console.error('Error fetching potential matches:', error);
@@ -23,7 +22,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         try {
             const matchRequestsResponse = await fetch(`/users/${userId}/requests`);
             const matchRequests = await matchRequestsResponse.json();
-            console.log('Match Requests: ', matchRequests);
 
             return matchRequests.map(entry => {
                 return {
@@ -69,7 +67,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         matchesData.forEach(match => {
-            console.log('Match: ', match);
             const listItem = document.createElement('li');
             listItem.dataset.requestId = match.requestId;
 
@@ -148,16 +145,16 @@ document.addEventListener('DOMContentLoaded', async function () {
                 body: !isRequest ? JSON.stringify({requestId: id,}) : JSON.stringify({receiverUserId: id,}),
             });
 
-            console.log('API Response:', response);
-
             if (!response.ok) {
                 throw new Error('Failed to update request status');
             }
 
             if (isRequest) {
+                alert('Request is sent successfully!')
                 const potentialMatchesData = await fetchPotentialMatches();
                 updateMatchesList(potentialMatchesData, potentialMatchesList, 'Connect', '', isRequest = true);
             } else {
+                status === 'Accept' ? alert('Request is accepted successfully!') : alert('Request is declined :(');
                 const matchRequestsData = await fetchMatchRequests(userId);
                 updateMatchesList(matchRequestsData, matchRequestsList, 'Accept', 'Decline', isRequest = false);
             }
