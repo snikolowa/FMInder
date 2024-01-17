@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 profileInfoContainer.classList.add('profile-info');
 
                 const profilePicture = document.createElement('img');
-                profilePicture.src = match.profilePicture === null ? '../assets/placeholder.png' : match.profilePicture;
+                profilePicture.src = match.profilePicture ? `data:image/jpeg;base64,${match.profilePicture}` : '../assets/placeholder.png';
                 profilePicture.alt = 'Profile Picture';
 
                 const usernameAnchor = document.createElement('a');
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         profileInfo.innerHTML = '';
 
         const profilePicture = document.createElement('img');
-        profilePicture.src = `data:image/jpeg;base64,${user.profilePicture}` || '../assets/placeholder.png';
+        profilePicture.src = user.profilePicture ? `data:image/jpeg;base64,${user.profilePicture}` : '../assets/placeholder.png';
         profilePicture.alt = 'Profile Picture';
 
         const nameElement = document.createElement('h3');
