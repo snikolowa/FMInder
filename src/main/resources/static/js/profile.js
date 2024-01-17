@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         profileInfo.innerHTML = '';
 
         const profilePicture = document.createElement('img');
-        profilePicture.src = user.profilePicture || '../assets/placeholder.png';
+        profilePicture.src = `data:image/jpeg;base64,${user.profilePicture}` || '../assets/placeholder.png';
         profilePicture.alt = 'Profile Picture';
 
         const nameElement = document.createElement('h3');

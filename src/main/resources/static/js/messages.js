@@ -46,6 +46,12 @@ document.addEventListener('DOMContentLoaded', async function () {
                 window.location.href = '/api/chat';
             });
 
+            const profilePicture = document.createElement('img');
+            profilePicture.src = (message.senderId === +userId)
+                ? (receiverData.profilePicture ? `data:image/jpeg;base64,${receiverData.profilePicture}` : '../assets/placeholder.png')
+                : (userData.profilePicture ? `data:image/jpeg;base64,${userData.profilePicture}` : '../assets/placeholder.png');
+            profilePicture.alt = 'Profile Picture';
+
             const sender = document.createElement('span');
             sender.textContent =  senderName;
 
@@ -55,6 +61,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             const messageTimestamp = document.createElement('span');
             messageTimestamp.textContent = 'Sent at ' + formatTimestamp(message.timestamp);
 
+            chatAnchor.appendChild(profilePicture);
             chatAnchor.appendChild(sender);
             chatAnchor.appendChild(messageText);
             chatAnchor.appendChild(messageTimestamp);

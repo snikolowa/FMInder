@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             profileInfoContainer.classList.add('profile-info');
 
             const profilePicture = document.createElement('img');
-            profilePicture.src = match.profilePicture || '../assets/placeholder.png';
+            profilePicture.src = match.profilePicture ? `data:image/jpeg;base64,${match.profilePicture}` : '../assets/placeholder.png';
             profilePicture.alt = 'Profile Picture';
 
             const usernameAnchor = document.createElement('a');

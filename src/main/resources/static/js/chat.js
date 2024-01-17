@@ -19,8 +19,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             const response = await fetch(`/chat/${receiverId}`);
             const messages = await response.json();
 
-            console.log(messages);
-
             const otherUserId =  userId === receiverId ? messages[0].senderId : receiverId;
             const otherUserResponse = await fetch(`/users/${otherUserId}`);
             const otherUserData = await otherUserResponse.json();
@@ -50,6 +48,10 @@ document.addEventListener("DOMContentLoaded", async function () {
                 const li = document.createElement("li");
                 li.classList.add('message');
 
+                const profilePicture = document.createElement('img');
+                profilePicture.src = userData.profilePicture ? `data:image/jpeg;base64,${userData.profilePicture}` : '../assets/placeholder.png';
+                profilePicture.alt = 'Profile Picture';
+
                 const sender = document.createElement('span');
                 sender.textContent =  userData.firstName + ' ' + userData.lastName;
 
@@ -59,6 +61,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 const messageTimestamp = document.createElement('span');
                 messageTimestamp.textContent = 'Sent at ' + formatTimestamp(message.timestamp);
 
+                li.appendChild(profilePicture);
                 li.appendChild(sender);
                 li.appendChild(messageText);
                 li.appendChild(messageTimestamp);
